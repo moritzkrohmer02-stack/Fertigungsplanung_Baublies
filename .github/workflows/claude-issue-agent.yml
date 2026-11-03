@@ -1,0 +1,96 @@
+name: Claude Code Issue Agent mit Test-Loop
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  run-claude:
+    if: github.event.label.name == 'claude' || contains(github.event.issue.labels.*.name, 'claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node.js bereitstellen & Abhängigkeiten installieren
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Projektabhängigkeiten installieren
+        run: npm ci
+
+      - name: Claude Code CLI installieren
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Git konfigurieren
+        run: |
+          git config user.name "Claude-Bot"
+          git config user.email "bot@users.noreply.github.com"
+
+      - name: Branch erstellen & Claude Code ausführen
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BRANCH_NAME="claude/issue-${ISSUE_NUMBER}"
+          git checkout -b $BRANCH_NAME
+
+          # 1. Ursprünglicher Prompt an Claude
+          PROMPT="Bearbeite folgende Aufgabe aus GitHub Issue #${ISSUE_NUMBER}:
+          Titel: ${ISSUE_TITLE}
+          Beschreibung: ${ISSUE_BODY}
+          
+          Nimm alle notwendigen Code-Änderungen im Repository vor."
+
+          echo "=== Starte initiale Bearbeitung durch Claude ==="
+          claude --dangerously-skip-permissions -p "$PROMPT"
+
+          # 2. Test- und Selbstkorrektur-Schleife (max. 3 Versuche)
+          MAX_RETRIES=3
+          tests_passed=false
+
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            echo "=== Führe Tests aus (Versuch $i von $MAX_RETRIES) ==="
+            
+            if npm test; then
+              echo "✅ Alle Tests erfolgreich bestanden!"
+              tests_passed=true
+              break
+            else
+              echo "❌ Tests sind fehlgeschlagen. Claude korrigiert den Code..."
+              
+              CORRECTION_PROMPT="Die automatischen Tests ('npm test') sind nach deinen Änderungen fehlgeschlagen. 
+              Bitte analysiere die Testausgabe, behebe den Fehler im Code und sorge dafür, dass die Tests erfolgreich durchlaufen."
+              
+              claude --dangerously-skip-permissions -p "$CORRECTION_PROMPT"
+            fi
+          done
+
+          if [ "$tests_passed" = false ]; then
+            echo "⚠️ Warnung: Maximale Anzahl an Test-Versuchen erreicht, trotz Fehlern wird fortgefahren oder manuell geprüft."
+          fi
+
+          # 3. Änderungen committen und pushen
+          git add .
+          git commit -m "fix: Automatische Behebung von Issue #${ISSUE_NUMBER} durch Claude (inkl. Tests)" || exit 0
+          git push origin $BRANCH_NAME
+
+          # 4. Pull Request erstellen
+          gh pr create \
+            --title "Fix für Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}" \
+            --body "Dieser PR wurde automatisch von Claude Code erstellt und hat die Testschleife durchlaufen." \
+            --head $BRANCH_NAME \
+            --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
