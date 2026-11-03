@@ -42,6 +42,7 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH_NAME="claude/issue-${ISSUE_NUMBER}"
           git checkout -b $BRANCH_NAME
@@ -78,7 +79,7 @@ jobs:
           done
 
           if [ "$tests_passed" = false ]; then
-            echo "⚠️ Warnung: Maximale Anzahl an Test-Versuchen erreicht, trotz Fehlern wird fortgefahren oder manuell geprüft."
+            echo "⚠️ Warnung: Maximale Anzahl an Test-Versuchen erreicht, trotz Fehlern wird fortgefahren."
           fi
 
           # 3. Änderungen committen und pushen
@@ -92,5 +93,3 @@ jobs:
             --body "Dieser PR wurde automatisch von Claude Code erstellt und hat die Testschleife durchlaufen." \
             --head $BRANCH_NAME \
             --base main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
