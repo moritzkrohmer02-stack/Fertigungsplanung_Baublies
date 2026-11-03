@@ -18,15 +18,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Node.js bereitstellen & Abhängigkeiten installieren
+# Ersetzen durch:
+      - name: Node.js bereitstellen
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Projektabhängigkeiten installieren
-        run: npm ci
+      - name: Projektabhängigkeiten installieren (falls package.json existiert)
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          fi
 
       - name: Claude Code CLI installieren
         run: npm install -g @anthropic-ai/claude-code
