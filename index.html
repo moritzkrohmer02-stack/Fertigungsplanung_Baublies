@@ -1,0 +1,1570 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fertigungsplanung Rollen &amp; Strehler</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Werkstatt-Leitstand. Schmale Navigationsleiste links, Arbeitsfläche rechts; Tabellen und Raster statt Karten. */
+:root{
+  --bg:#f3f4f2; --panel:#ffffff; --panel-2:#eef0ee; --line:#d9ddd9; --line-2:#c4cac5;
+  --ink:#1b2226; --ink-2:#4a555b; --ink-3:#7a858a;
+  --accent:#2d5a9b; --accent-ink:#ffffff; --accent-soft:#e3ebf6;
+  --straw:#c8962e; --straw-soft:#f6ecd4;
+  --ok:#2f7d4f; --ok-soft:#dcefe3; --warn:#b4720b; --warn-soft:#fbecd0; --bad:#b8352b; --bad-soft:#f7dedb; --idle:#9aa3a7; --idle-soft:#e7eaea;
+  --kw-a:#ffffff; --kw-b:#f1f4f8;
+  --shadow:0 8px 30px rgba(20,30,40,.14);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14191c; --panel:#1b2226; --panel-2:#222a2f; --line:#2e383d; --line-2:#3d484e;
+  --ink:#e6eaeb; --ink-2:#b0babe; --ink-3:#7f8b90;
+  --accent:#7aa5e6; --accent-ink:#0e1a2c; --accent-soft:#1f3047;
+  --straw:#e0b45a; --straw-soft:#3a3020;
+  --ok:#5cc187; --ok-soft:#1c3427; --warn:#e2a443; --warn-soft:#3b2e17; --bad:#ef7a6f; --bad-soft:#41221f; --idle:#6f7a7f; --idle-soft:#262e32;
+  --kw-a:#1b2226; --kw-b:#20292e; --shadow:0 8px 30px rgba(0,0,0,.5); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#14191c; --panel:#1b2226; --panel-2:#222a2f; --line:#2e383d; --line-2:#3d484e;
+  --ink:#e6eaeb; --ink-2:#b0babe; --ink-3:#7f8b90;
+  --accent:#7aa5e6; --accent-ink:#0e1a2c; --accent-soft:#1f3047;
+  --straw:#e0b45a; --straw-soft:#3a3020;
+  --ok:#5cc187; --ok-soft:#1c3427; --warn:#e2a443; --warn-soft:#3b2e17; --bad:#ef7a6f; --bad-soft:#41221f; --idle:#6f7a7f; --idle-soft:#262e32;
+  --kw-a:#1b2226; --kw-b:#20292e; --shadow:0 8px 30px rgba(0,0,0,.5); color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%}
+.side{background:var(--panel);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;gap:18px;padding-left:max(12px,env(safe-area-inset-left,0px))}
+.brand{font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.02em;line-height:1.2;padding:0 8px}
+.brand small{display:block;font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--ink-3);letter-spacing:0;margin-top:3px}
+.temper{height:4px;border-radius:2px;margin:10px 8px 0;background:linear-gradient(90deg,#e9d8a6,#c8962e,#8a5a2b,#6b3f6e,#2d5a9b,#5b8fc8)}
+nav.tabs{display:flex;flex-direction:column;gap:2px}
+nav.tabs a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:var(--ink-2);text-decoration:none;font-weight:600}
+nav.tabs a:hover{background:var(--panel-2);color:var(--ink)}
+nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+nav.tabs svg{width:18px;height:18px;flex:none}
+.side-foot{margin-top:auto;font-size:12px;color:var(--ink-3);padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.conn{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--idle);display:inline-block}
+.dot.ok{background:var(--ok)} .dot.bad{background:var(--bad)} .dot.warn{background:var(--warn)}
+main{min-width:0;padding-block:20px 60px;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.topbar > div:first-child{flex:1 1 360px;min-width:0}
+.topbar .grow{display:none}
+a.kpi{color:inherit;text-decoration:none}
+.topbar h1{font-family:var(--f-display);font-size:24px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.topbar .sub{color:var(--ink-3);font-size:14px}
+.grow{flex:1}
+.gsearch{position:relative}
+.gsearch input{width:280px;max-width:100%}
+.banner{background:var(--straw-soft);border:1px solid var(--straw);color:var(--ink);padding:8px 12px;border-radius:var(--r);margin-bottom:14px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* controls */
+input[type=text],input[type=number],input[type=date],input[type=search],select,textarea{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r);padding:7px 9px;min-height:36px;max-width:100%}
+textarea{min-height:70px;width:100%;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line-2);background:var(--panel);border-radius:var(--r);padding:7px 13px;min-height:36px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.small{min-height:30px;padding:4px 9px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:7px 12px;font-weight:600;cursor:pointer;min-height:34px}
+.seg button+button{border-left:1px solid var(--line-2)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2);min-width:0}
+label.f > input,label.f > select,label.f > textarea{font-weight:400;color:var(--ink);width:100%}
+.hint{font-size:12.5px;color:var(--ink-3);font-weight:400}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.toolbar label.f{min-width:140px}
+.chk{display:inline-flex;align-items:center;gap:7px;font-size:14px;cursor:pointer}
+
+/* panels */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.panel h2{font-family:var(--f-display);font-size:16px;font-weight:700;margin:0 0 12px;letter-spacing:.005em;text-wrap:balance}
+.panel h2 .hint{font-family:var(--f-body);margin-left:6px}
+.grid{display:grid;gap:14px}
+.grid > *,.kpis > *{min-width:0}
+.seg{flex-wrap:wrap;max-width:100%}
+.seg button{white-space:normal;text-align:center}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px;cursor:pointer;text-align:left}
+.kpi:hover{border-color:var(--line-2)}
+.kpi .k{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .s{font-size:13px;color:var(--ink-2)}
+.kpi.bad .v{color:var(--bad)} .kpi.warn .v{color:var(--warn)} .kpi.ok .v{color:var(--ok)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+table.t{border-collapse:collapse;width:100%;font-size:14px}
+.t th{position:sticky;top:0;background:var(--panel-2);text-align:left;font-weight:600;font-size:12.5px;color:var(--ink-2);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1}
+.t th.sort{cursor:pointer;user-select:none}
+.t th.sort:hover{color:var(--ink)}
+.t td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.t tbody tr:last-child td{border-bottom:0}
+.t tr.click{cursor:pointer}
+.t tr.click:hover td{background:var(--accent-soft)}
+.t tr.kwb td{background:var(--kw-b)}
+.t td.num,.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.t td.nowrap{white-space:nowrap}
+.t select.inl{min-height:30px;padding:3px 6px;font-size:13px;max-width:210px}
+.mono{font-family:var(--f-mono);font-size:13px}
+.clip{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.muted{color:var(--ink-3)}
+.tablefoot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 2px;font-size:13px;color:var(--ink-3);flex-wrap:wrap}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;background:var(--idle-soft);color:var(--ink-2)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.acc{background:var(--accent-soft);color:var(--accent)} .pill.straw{background:var(--straw-soft);color:var(--straw)}
+.stripe{width:4px;height:22px;border-radius:2px;display:inline-block;background:var(--idle)}
+.stripe.bad{background:var(--bad)} .stripe.warn{background:var(--warn)} .stripe.ok{background:var(--ok)}
+
+/* ampel */
+.ampel td.cell{padding:4px}
+.amp{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px;min-width:70px;height:46px;font-variant-numeric:tabular-nums;cursor:pointer;border:1px solid transparent}
+.amp b{font-size:15px}
+.amp span{font-size:11.5px;opacity:.85}
+.amp.ok{background:var(--ok-soft);color:var(--ok)} .amp.warn{background:var(--warn-soft);color:var(--warn)} .amp.bad{background:var(--bad-soft);color:var(--bad)} .amp.idle{background:var(--idle-soft);color:var(--ink-3)}
+.amp.none{background:repeating-linear-gradient(135deg,var(--panel-2) 0 6px,var(--panel) 6px 12px);color:var(--ink-3)}
+.amp:hover{border-color:var(--ink-3)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+
+/* bars */
+.sbar{display:flex;height:26px;border-radius:4px;overflow:hidden;background:var(--panel-2)}
+.sbar > div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
+.blist{display:flex;flex-direction:column;gap:6px}
+.bl{display:grid;grid-template-columns:minmax(0,220px) 1fr 70px 70px;gap:10px;align-items:center;font-size:13.5px}
+.bl .tr{height:12px;background:var(--panel-2);border-radius:3px;overflow:hidden}
+.bl .tr div{height:100%;background:var(--accent);border-radius:3px}
+.bl .n{text-align:right;font-variant-numeric:tabular-nums}
+.heat td.h{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
+
+/* week plan */
+.wk{display:grid;gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);overflow:hidden}
+.wkwrap{overflow-x:auto}
+.wk .hd{background:var(--panel-2);padding:8px 10px;font-weight:600;font-size:13px;border-bottom:1px solid var(--line);border-left:1px solid var(--line)}
+.wk .hd.today{color:var(--accent)}
+.wk .mc{padding:10px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:4px;background:var(--panel)}
+.wk .mc small{font-weight:400;color:var(--ink-3)}
+.wk .dc{border-bottom:1px solid var(--line);border-left:1px solid var(--line);padding:6px;min-height:92px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
+.wk .dc:hover{background:var(--panel-2)}
+.wk .dc.drop{background:var(--accent-soft);outline:2px dashed var(--accent);outline-offset:-3px}
+.wk .dc.off{background:repeating-linear-gradient(135deg,var(--panel-2) 0 6px,var(--panel) 6px 12px)}
+.cap{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.cap .tr{flex:1;height:6px;background:var(--panel-2);border-radius:3px;overflow:hidden;border:1px solid var(--line)}
+.cap .tr div{height:100%}
+.cap.ok .tr div{background:var(--ok)} .cap.warn .tr div{background:var(--warn)} .cap.bad .tr div{background:var(--bad)} .cap.bad{color:var(--bad);font-weight:700}
+.note{font-size:11.5px;background:var(--straw-soft);color:var(--ink);border-radius:3px;padding:1px 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{font-size:12px;border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:4px;padding:3px 6px;background:var(--panel);cursor:grab;display:flex;flex-direction:column;min-width:0}
+.chip:hover{border-color:var(--ink-3);border-left-color:var(--accent)}
+.chip .a{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .b{color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.pers{border-left-color:var(--straw)}
+.chip.late{border-left-color:var(--bad)}
+
+/* drawer & modal */
+.scrim{position:fixed;inset:0;background:rgba(15,20,25,.38);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--panel);z-index:41;box-shadow:var(--shadow);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100% - 24px));max-height:calc(100% - 40px);background:var(--panel);z-index:41;box-shadow:var(--shadow);border-radius:8px;display:flex;flex-direction:column}
+.dh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.dh h3{font-family:var(--f-display);font-size:18px;margin:0;font-weight:700;flex:1;min-width:0;text-wrap:balance}
+.db{padding:16px 18px;overflow:auto;display:flex;flex-direction:column;gap:14px;flex:1}
+.df{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fg .span2{grid-column:1/-1}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 14px;background:var(--panel-2);border-radius:var(--r);padding:12px}
+.facts div{display:flex;flex-direction:column;min-width:0}
+.facts dt{font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.sect{font-family:var(--f-display);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin:4px 0 -4px}
+.mpick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mpick button{border:1px solid var(--line-2);background:var(--panel);border-radius:var(--r);padding:7px;text-align:left;cursor:pointer;font-size:13px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.mpick button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);outline:1px solid var(--accent)}
+.mpick small{font-size:11.5px}
+.confirm{background:var(--bad-soft);border:1px solid var(--bad);border-radius:var(--r);padding:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ac{position:relative}
+.aclist{position:absolute;left:0;right:0;top:100%;background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r);box-shadow:var(--shadow);z-index:50;max-height:260px;overflow:auto}
+.aclist button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;cursor:pointer;font-size:13.5px}
+.aclist button:hover,.aclist button.sel{background:var(--accent-soft)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:var(--r);z-index:60;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);max-width:calc(100% - 32px);font-size:14px}
+.toast button{background:none;border:1px solid currentColor;color:inherit;border-radius:4px;padding:3px 8px;cursor:pointer;font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--ink-3)}
+.subtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+.subtabs button{border:0;background:none;padding:9px 12px;font-weight:600;color:var(--ink-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.subtabs button[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.steps td input[type=number]{width:70px}
+svg.chart text{fill:var(--ink-3);font-size:11px;font-family:var(--f-body)}
+svg.chart .grid{stroke:var(--line)}
+
+@media (max-width: 1100px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .g3{grid-template-columns:1fr 1fr} }
+@media (max-width: 820px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);height:auto;flex-direction:row;align-items:center;padding:8px 12px;z-index:20;border-right:0;border-bottom:1px solid var(--line);gap:10px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+  .brand small,.temper,.side-foot{display:none}
+  nav.tabs{flex-direction:row;overflow-x:auto;flex:1}
+  nav.tabs a{padding:7px 9px;white-space:nowrap}
+  nav.tabs a span{display:none}
+  nav.tabs a[aria-current="page"] span{display:inline}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .g2,.g3{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fg{grid-template-columns:1fr}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mpick{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bl{grid-template-columns:minmax(0,1fr) 80px 46px 56px}
+  .gsearch input{width:100%}
+  .gsearch{width:100%}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">Fertigungsplanung<small>Rollen &amp; Strehler · Arbeitsvorbereitung</small><div class="temper" aria-hidden="true"></div></div>
+    <nav class="tabs" id="nav" aria-label="Bereiche"></nav>
+    <div class="side-foot">
+      <span class="conn"><i class="dot" id="connDot"></i><span id="connTxt">Verbinde …</span></span>
+      <span id="footUser"></span>
+    </div>
+  </aside>
+  <main id="main">
+    <div id="banner"></div>
+    <div class="topbar">
+      <div><h1 id="title">Übersicht</h1><div class="sub" id="subtitle"></div></div>
+      <div class="grow"></div>
+      <div class="gsearch"><input type="search" id="gsearch" placeholder="Suchen: FA, Artikel, Kunde …" aria-label="Aufträge durchsuchen"></div>
+      <button class="btn primary" data-action="new-order" type="button">+ Neuer Auftrag</button>
+    </div>
+    <div id="toolbar"></div>
+    <div id="body"><div class="empty">Daten werden geladen …</div></div>
+  </main>
+</div>
+<div id="overlay"></div>
+<div id="toastHost"></div>
+<script>
+'use strict';
+/* ===================== Hilfsfunktionen ===================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const numOr = (v, d = null) => { if (v === null || v === undefined || v === '') return d; const n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.')); return Number.isFinite(n) ? n : d; };
+const pos = (v, d = 0) => { const n = numOr(v, d); return n === null ? d : Math.max(0, n); };
+const COLL = new Intl.Collator('de', { sensitivity: 'base', numeric: true });
+const fmtNum = (n, dig = 1) => n === null || n === undefined || !Number.isFinite(n) ? '–' : n.toLocaleString('de-DE', { maximumFractionDigits: dig, minimumFractionDigits: 0 });
+const fmtPct = n => !Number.isFinite(n) ? '–' : (n * 100).toLocaleString('de-DE', { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + ' %';
+const dez = v => /^-?\d+\.\d+$/.test(String(v ?? '')) ? String(v).replace('.', ',') : v;
+const uid = p => p + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const norm = s => String(s ?? '').toLowerCase().trim();
+const clone = o => JSON.parse(JSON.stringify(o));
+
+/* Datum: intern als Tageszahl (UTC), Speicherung als 'YYYY-MM-DD' */
+const D = {
+  parse(s) { if (!s || typeof s !== 'string') return null; const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/); if (!m) return null; return Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5; },
+  str(n) { return new Date(n * 864e5).toISOString().slice(0, 10); },
+  today() { const t = new Date(); return Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()) / 864e5; },
+  wd(n) { const w = new Date(n * 864e5).getUTCDay(); return w === 0 ? 7 : w; },          // 1 = Montag … 7 = Sonntag
+  iso(n) { const th = n + 4 - D.wd(n); const y = new Date(th * 864e5).getUTCFullYear(); const j1 = Date.UTC(y, 0, 1) / 864e5; return { y, w: Math.floor((th - j1) / 7) + 1 }; },
+  monday(n) { return n - (D.wd(n) - 1); },
+  fmt(s) { const n = typeof s === 'number' ? s : D.parse(s); if (n === null) return ''; const d = new Date(n * 864e5); return String(d.getUTCDate()).padStart(2, '0') + '.' + String(d.getUTCMonth() + 1).padStart(2, '0') + '.' + d.getUTCFullYear(); },
+  fmtS(s) { const n = typeof s === 'number' ? s : D.parse(s); if (n === null) return ''; const d = new Date(n * 864e5); return String(d.getUTCDate()).padStart(2, '0') + '.' + String(d.getUTCMonth() + 1).padStart(2, '0') + '.'; },
+  kw(s) { const n = typeof s === 'number' ? s : D.parse(s); if (n === null) return ''; const i = D.iso(n); return String(i.w).padStart(2, '0') + '/' + i.y; },
+  weekId(n) { const i = D.iso(n); return i.y + '-W' + String(i.w).padStart(2, '0'); },
+  dayName(n) { return ['', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'][D.wd(n)]; },
+  dayShort(n) { return ['', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][D.wd(n)]; },
+  easter(y) { const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mo = Math.floor((h + l - 7 * m + 114) / 31), da = ((h + l - 7 * m + 114) % 31) + 1; return Date.UTC(y, mo - 1, da) / 864e5; },
+  weekFromId(id) { const m = String(id).match(/^(\d{4})-W(\d{2})$/); if (!m) return null; const y = +m[1], w = +m[2]; const j4 = Date.UTC(y, 0, 4) / 864e5; return D.monday(j4) + (w - 1) * 7; }
+};
+
+/* ===================== Standard-Konfiguration (aus der Excel abgeleitet) ===================== */
+const DEFAULT_CFG = {
+  version: 1,
+  maschinen: [
+    { id: 'mikromat', name: 'Mikromat', lang: 'Profilschleifen 5162 Mikromat G3', bereich: 'Profil', std: 15, schichten: 2, staende: ['Mikromat'] },
+    { id: 'maegerle_alt', name: 'Mägerle alt', lang: 'Profilschleifen 0864 Mägerle MFP 125 (alt)', bereich: 'Profil', std: 15, schichten: 2, staende: ['Mägerle alt Profilschleifen'] },
+    { id: 'maegerle_neu', name: 'Mägerle neu', lang: 'Profilschleifen 0942 Mägerle MFP L-125 (neu)', bereich: 'Profil', std: 15, schichten: 2, staende: ['Mägerle neu Profilschleifen'] },
+    { id: 'studer_alt', name: 'Studer alt', lang: 'Profilschleifen 0834 Studer S33 / Außenschleifen (alt)', bereich: 'Profil', std: 15, schichten: 2, staende: ['Studer Kopier & Rollenschleifen', 'Außenschleifen'] },
+    { id: 'studer_neu', name: 'Studer neu', lang: 'Profilschleifen 0835 Studer S33 / Außenschleifen (neu)', bereich: 'Profil', std: 15, schichten: 2, staende: ['Studer Kopier & Rollenschleifen', 'Außenschleifen'] },
+    { id: 's145', name: 'S 145', lang: 'Innenschleifen S 145', bereich: 'Innen', std: 7.6, schichten: 1, staende: ['S145 Innenschleifen'] },
+    { id: 's110', name: 'S 110', lang: 'Innenschleifen S 110', bereich: 'Innen', std: 7.6, schichten: 1, staende: ['S110 Innenschleifen'] },
+    { id: 'proth', name: 'Proth', lang: 'Flachschleifen Proth', bereich: 'Flachschleifen', std: 8, schichten: 1, staende: ['Proth Flachschleifen'] }
+  ],
+  staende: ['Kommissionieren', 'Am Lager', 'Gesperrt', 'unvollständig', 'Behringer/Bandsäge', 'Heller MCP 250', 'Mehrschnittsägen', 'Dreherei', 'Vakuumhärten', 'S145 Innenschleifen', 'S110 Innenschleifen', 'Innenschleifen', 'Proth Flachschleifen', 'Mägerle Flachschleifen', 'Außenschleifen', 'Mikromat', 'Studer Kopier & Rollenschleifen', 'Mägerle alt Profilschleifen', 'Mägerle neu Profilschleifen', 'Mägerle Tiefschleifen', 'Profil Vor/Fertigschleifen', 'Fräsen Gewindeprofil', 'Schleifen Anschnitt', 'Schleifen Schnitt', 'Schleifen Fase', 'Kopp Kurve Schleifen', 'Nut schleifen', 'Entgraten', 'Laserbeschriften', 'Montage', 'Extern Kurzzeit-Plasmadiffusionsnitrieren', 'Extern MST Polieren', 'Extern MST Reinigen und Verdichten', 'Extern Eifeler Coating', 'Extern Sauer Profilschleifen', 'Extern Werz Vakuumhärten', 'Extern Werz Beschichten', 'Extern Stähli Läppen', 'Extern Deutsche Edelstahl', 'Extern Krohmer Erodieren', 'Extern Verzahnen', 'Extern DLC Beschichten', 'Extern Spitzenlos Schleifen', 'Sortieren/Verpacken', 'geliefert'],
+  eingeplant: ['noch nicht eingeplant', 'profiliert', 'Rändelrolle'],
+  gruende: ['Externer Lieferant', 'Kapazität intern', 'Reihenfolge geändert', 'Eilauftrag', 'Fehlteile', 'QS / Nacharbeit', 'Planung falsch', 'Kein Halbfabrikat', 'Keine Personalkapazität', 'Keine Maschinenkapazität', 'Wartet auf Entscheidung', 'Unbekannt (nur temporär erlaubt!)'],
+  // Lieferzeit-Punkte (Stammdaten Spalte AL) -> Wochen (Spalte AM)
+  punkteWochen: [2, 3, 4, 5, 6],
+  // Stück je Paar/Satz (Kennzahlen-Blatt)
+  faktor: { 'rolle tangential': 2, 'rolle axial': 3, 'rolle radial': 2, 'strehler': 4 },
+  ruhetage: [
+    { d: '12-24', n: 'Heiligabend' }, { d: '12-31', n: 'Silvester' },
+    { d: '2026-06-05', n: 'Brückentag' }, { d: '2026-12-28', n: 'Betriebsferien' }, { d: '2026-12-29', n: 'Betriebsferien' }, { d: '2026-12-30', n: 'Betriebsferien' }
+  ],
+  // Netzplan Vorarbeit: optimistisch / realistisch / pessimistisch in Arbeitstagen
+  routen: {
+    'Strehler': {
+      vor: [['Sägerei', 1, 3, 10, 0], ['Heller MCP 250', 2, 5, 15, 0], ['Mehrschnittsägen', 1, 2, 5, 0], ['Extern Werz Vakuumhärten', 5, 5, 5, 0], ['Mägerle Flachschleifen', 2, 5, 7, 0], ['Schleifen Längsseite/Schräge', 2, 5, 7, 0]],
+      kern: [['Kommissionieren', 1, 1, 1, 0], ['Laserbeschriften', 1, 5, 15, 0], ['Mägerle Profilschleifen alt oder neu', 2, 5, 15, 1], ['Fräsen Schnitt', 1, 2, 3, 1], ['Fräsen Anschnitt', 1, 3, 4, 1], ['Fräsen Gewindeprofil', 3, 5, 8, 1], ['Schleifen Anschnitt', 2, 4, 8, 1], ['Schleifen Fase', 1, 1, 2, 1], ['Schleifen Schnitt', 1, 2, 3, 1], ['Mägerle Tiefschleifen', 2, 7, 15, 1], ['Extern Kurzzeit-Plasmadiffusionsnitrieren', 2, 3, 3, 1, 'nitrieren'], ['Extern Eifeler Coating', 3, 5, 7, 1, 'eifeler'], ['Sortieren/Verpacken', 1, 3, 5, 0]]
+    },
+    'Rolle axial': {
+      vor: [['Dreherei', 2, 10, 20, 0], ['Extern Werz Vakuumhärten', 5, 5, 5, 0], ['Innenschleifen S110 oder S145', 5, 10, 20, 0], ['Proth Flachschleifen', 2, 10, 20, 0]],
+      kern: [['Kommissionieren', 1, 1, 1, 0], ['Außenschleifen', 2, 5, 10, 1], ['Laserbeschriften', 1, 3, 10, 0], ['Studer Kopier & Rollenschleifen', 2, 5, 15, 1], ['Mägerle Profilschleifen alt oder neu', 2, 5, 15, 1], ['Extern Kurzzeit-Plasmadiffusionsnitrieren', 2, 3, 3, 1, 'nitrieren'], ['Extern MST Polieren', 2, 3, 5, 1, 'mst'], ['Extern MST Reinigen und Verdichten', 2, 3, 5, 1, 'mst'], ['Extern Sauer Profilschleifen', 10, 10, 10, 1, 'sauer'], ['Sortieren/Verpacken', 1, 3, 5, 0]]
+    },
+    'Rolle tangential': {
+      vor: [['Dreherei', 2, 10, 20, 0], ['Extern Werz Vakuumhärten', 5, 5, 5, 0], ['Innenschleifen S110 oder S145', 5, 10, 20, 0], ['Proth Flachschleifen', 2, 10, 20, 0]],
+      kern: [['Kommissionieren', 1, 1, 1, 0], ['Außenschleifen', 2, 5, 10, 0], ['Mikromat', 2, 5, 15, 1], ['Mägerle Profilschleifen alt oder neu', 2, 5, 15, 1], ['Nut schleifen', 2, 5, 10, 1], ['Entgraten', 1, 2, 5, 1], ['Extern Kurzzeit-Plasmadiffusionsnitrieren', 2, 3, 3, 1, 'nitrieren'], ['Extern MST Polieren', 2, 3, 5, 1, 'mst'], ['Extern MST Reinigen und Verdichten', 2, 3, 5, 1, 'mst'], ['Extern Sauer Profilschleifen', 10, 10, 10, 1, 'sauer'], ['Sortieren/Verpacken', 1, 3, 5, 0]]
+    }
+  },
+  // Externe Sonderregeln (Stammdaten Spalten BV–BY): Kalendertage je Wochentag des Versands (Mo..Fr)
+  regeln: {
+    nitrieren: { name: 'Nitrieren (Versand-Rhythmus)', tage: [3, 7, 6, 7, 6] },
+    eifeler: { name: 'Eifeler Coating (Versand-Rhythmus)', tage: [8, 7, 9, 8, 7] },
+    sauer: { name: 'Sauer Profilschleifen', fix: 7 },
+    mst: { name: 'MST Polieren / Reinigen & Verdichten', arbeitstage: 2 }
+  }
+};
+function mergeCfg(stored) {
+  const c = clone(DEFAULT_CFG);
+  if (!stored) return c;
+  for (const k of Object.keys(stored)) if (stored[k] !== null && stored[k] !== undefined && k in c) c[k] = stored[k];
+  return c;
+}
+
+/* ===================== Zustand ===================== */
+const S = {
+  mode: 'init', db: null, user: null, uid: null, canWrite: true,
+  cfg: clone(DEFAULT_CFG),
+  master: null, masterIdx: new Map(), capOrder: [],
+  overrides: new Map(),
+  orders: new Map(),
+  planDocs: new Map(), entries: [], byMD: new Map(), byFA: new Map(), byOrder: new Map(),
+  kap: new Map(),
+  gelStatic: [], gelDb: new Map(),
+  bestand: new Map(),
+  loaded: {}, view: 'uebersicht', profiles: {},
+  ui: { orders: { q: '', bereich: 'RS', stand: '', eing: '', perf: '', sort: 'ltBest', dir: 1, cols: null, page: 0 }, plan: { week: null, mode: 'woche', month: null }, listen: { tab: 'platz', stand: 'S145 Innenschleifen', ext: 'Extern Kurzzeit-Plasmadiffusionsnitrieren', nurFehl: false }, kenn: { jahr: 'alle', q: '', page: 0 }, stamm: { tab: 'artikel', q: '' }, termin: null }
+};
+
+/* ===================== Speicherschicht ===================== */
+const COLS = ['auftraege', 'plan', 'kapazitaet', 'geliefert', 'bestand', 'artikel', 'einstellungen'];
+const Local = {
+  key: 'fp-local-v1', data: null, subs: {},
+  async init() {
+    try { const raw = localStorage.getItem(this.key); if (raw) this.data = JSON.parse(raw); } catch (e) { }
+    if (!this.data) {
+      this.data = {}; COLS.forEach(c => this.data[c] = {});
+      try { const r = await fetch('seed-local.json'); if (r.ok) { const s = await r.json(); for (const c of Object.keys(s)) this.data[c] = s[c]; } } catch (e) { }
+      this.save();
+    }
+    COLS.forEach(c => { if (!this.data[c]) this.data[c] = {}; });
+  },
+  save() { try { localStorage.setItem(this.key, JSON.stringify(this.data)); } catch (e) { } },
+  emit(col) { (this.subs[col] || []).forEach(fn => fn(this.data[col])); },
+  subscribe(col, fn) { (this.subs[col] = this.subs[col] || []).push(fn); setTimeout(() => fn(this.data[col]), 0); },
+  async set(col, id, doc) { this.data[col][id] = clone(doc); this.save(); this.emit(col); },
+  async update(col, id, patch) {
+    if (!this.data[col][id]) throw { code: 'invalid_argument', message: 'Dokument fehlt' };
+    const merge = (t, p) => { for (const k of Object.keys(p)) { const v = p[k]; if (v && typeof v === 'object' && !Array.isArray(v) && t[k] && typeof t[k] === 'object' && !Array.isArray(t[k])) merge(t[k], v); else t[k] = clone(v); } };
+    merge(this.data[col][id], patch); this.save(); this.emit(col);
+  },
+  async del(col, id) { delete this.data[col][id]; this.save(); this.emit(col); },
+  reset() { try { localStorage.removeItem(this.key); } catch (e) { } location.reload(); }
+};
+const Remote = {
+  subscribe(col, fn) {
+    const t = setTimeout(() => setConn('warn', 'Verbindung langsam …'), 10000);
+    S.db.collection(col).onSnapshot(snap => {
+      if (!snap.metadata.fromCache) { clearTimeout(t); setConn('ok', 'Gespeichert & synchron'); }
+      const o = {}; snap.docs.forEach(d => { o[d.id] = d.data(); }); fn(o);
+    }, err => { clearTimeout(t); setConn('bad', 'Keine Verbindung zur Datenbank'); console.warn(col, err); });
+  },
+  async set(col, id, doc) { return S.db.collection(col).doc(id).set(doc); },
+  async update(col, id, patch) { return S.db.collection(col).doc(id).update(patch); },
+  async del(col, id) { return S.db.collection(col).doc(id).delete(); }
+};
+let Store = Local;
+async function write(fn, okMsg) {
+  try { await fn(); if (okMsg) toast(okMsg); return true; }
+  catch (e) {
+    console.warn(e);
+    const code = e && e.code;
+    if (code === 'invalid_argument') { S.canWrite = false; toast('Speichern nicht möglich: Sie haben nur Leserechte für dieses Tool.'); }
+    else if (code === 'quota_exceeded') toast('Speicher voll: bitte alte Einträge (z. B. Lieferhistorie) bereinigen.');
+    else toast('Speichern fehlgeschlagen. Bitte erneut versuchen.');
+    return false;
+  }
+}
+function stamp(o) { o.geaendertAm = new Date().toISOString(); if (S.uid) o.geaendertVon = S.uid; return o; }
+
+/* ===================== Stammdaten ===================== */
+const MCOLS = ['nr', 'kr', 'f34', 'halb', 'f14', 'kat', 'bez', 'grp', 'besch', 'bes', 'nut', 'stg', 'cap', 'lz', 'rz', 'pkt', 'gr'];
+function article(nr) {
+  if (nr === null || nr === undefined || nr === '') return null;
+  const key = String(nr).trim();
+  const ov = S.overrides.get(key);
+  const i = S.masterIdx.get(key);
+  let a = null;
+  if (i !== undefined) { const r = S.master[i]; a = {}; MCOLS.forEach((c, k) => a[c] = r[k]); a.quelle = 'Excel'; }
+  if (ov) { a = Object.assign(a || { nr: key, quelle: 'neu' }, ov); if (a.quelle === 'Excel') a.quelle = 'geändert'; }
+  return a;
+}
+function capOf(a, mid) {
+  if (!a || !a.cap) return '';
+  const parts = String(a.cap).split('|'); const i = S.capOrder.indexOf(mid); if (i < 0) return '';
+  const v = parts[i] || ''; if (v === 'j') return 'ja'; if (v === 'n') return 'nein'; if (v === '') return ''; return 'ja (' + v + ')';
+}
+function wochenAusPunkten(p) { const t = S.cfg.punkteWochen; const i = Math.max(0, Math.min(t.length - 1, Math.round(numOr(p, 0)))); return t[i]; }
+function faktor(typ) { return S.cfg.faktor[norm(typ)] || 1; }
+
+/* ===================== Abgeleitete Auftragsdaten (Spalten E–AE der Excel) ===================== */
+function enrich(o) {
+  const a = article(o.artikel);
+  const bez = o.bez || a?.bez || '';
+  const typ = o.typ || a?.grp || '';
+  const t = norm(typ);
+  const best = D.parse(o.ltBest), ist = D.parse(o.ltIst);
+  const ref = ist ?? best;
+  const today = D.today();
+  let perf = '', diff = null;
+  if (best !== null) { diff = best - (ist ?? best); perf = diff === 0 ? 'Pünktlich' : diff > 0 ? 'Früher' : 'Verspätet'; }
+  const nut = a?.nut || (t === 'rolle axial' || t === 'strehler' ? 'nein' : (a ? 'prüfen' : ''));
+  const nutGeschliffen = o.nutGeschliffen || (nut === 'nein' ? 'N/A' : 'nein');
+  const gm = bez.match(/^(S[A-Z]?\s?\d+)/i); const groesse = a && a.gr ? a.gr : t === 'strehler' ? (gm ? gm[1] : bez.slice(0, 4)) : (a ? 'Rolle' : '');
+  const fa = String(o.fa || '');
+  const plan = (S.byOrder.get(o._id) || []).concat(fa ? (S.byFA.get(fa) || []).filter(e => !e.orderId) : []);
+  return {
+    a, bez, typ, einheit: o.bereich === 'AR' ? '' : (t === 'rolle axial' || t === 'strehler' ? 'Satz' : 'Paar'),
+    kw: best !== null ? D.kw(best) : '', kwIst: ref !== null ? D.kw(ref) : '',
+    perf, diff, wochen: diff === null ? null : diff / 7,
+    ueberfaellig: ref !== null && ref < today && norm(o.stand) !== 'geliefert',
+    nut, nutGeschliffen, groesse,
+    besch: a?.besch || '', stg: dez(a?.stg || ''), kr: a?.kr || '', halb: o.halb || a?.halb || '', f34: a?.f34 || '', f14: a?.f14 || '',
+    lieferWochen: a ? wochenAusPunkten(a.pkt) : null, punkte: a ? a.pkt : null,
+    stueckEinzel: (numOr(o.stueck, 0)) * faktor(typ),
+    nacharbeit: /nacharbeit/i.test(fa),
+    plan, einzelFaktor: faktor(typ), geplantStueck: plan.reduce((s, e) => s + numOr(e.stueck, 0), 0), geplantH: plan.reduce((s, e) => s + numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0), 0)
+  };
+}
+function eingeplantNorm(v) { const s = String(v || '').trim(); if (/^rändelrolle/i.test(s)) return 'Rändelrolle'; if (/^noch nicht/i.test(s) || s === '') return 'noch nicht eingeplant'; if (/^profiliert/i.test(s)) return 'profiliert'; return s; }
+
+/* ===================== Planung & Kapazität (Blätter Auftragsplanung + Kapazitätsübersicht) ===================== */
+function machine(id) { return S.cfg.maschinen.find(m => m.id === id); }
+function rebuildPlan() {
+  const entries = [];
+  for (const [docId, doc] of S.planDocs) {
+    const e = doc.e || {};
+    for (const id of Object.keys(e)) { const x = e[id]; if (!x || !x.datum) continue; entries.push(Object.assign({ id, docId, maschine: doc.maschine }, x)); }
+  }
+  S.entries = entries; S.byMD = new Map(); S.byFA = new Map(); S.byOrder = new Map();
+  for (const x of entries) {
+    const k = x.maschine + '|' + x.datum; if (!S.byMD.has(k)) S.byMD.set(k, []); S.byMD.get(k).push(x);
+    if (x.orderId) { if (!S.byOrder.has(x.orderId)) S.byOrder.set(x.orderId, []); S.byOrder.get(x.orderId).push(x); }
+    else if (x.fa) { const f = String(x.fa); if (!S.byFA.has(f)) S.byFA.set(f, []); S.byFA.get(f).push(x); }
+  }
+}
+const holCache = new Map();
+function holidaysOf(y) {
+  if (holCache.has(y)) return holCache.get(y);
+  const e = D.easter(y), m = new Map(), f = (mo, d) => Date.UTC(y, mo - 1, d) / 864e5;
+  [[f(1, 1), 'Neujahr'], [f(1, 6), 'Heilige Drei Könige'], [e - 2, 'Karfreitag'], [e + 1, 'Ostermontag'], [f(5, 1), 'Tag der Arbeit'], [e + 39, 'Christi Himmelfahrt'], [e + 50, 'Pfingstmontag'], [e + 60, 'Fronleichnam'], [f(10, 3), 'Tag der Deutschen Einheit'], [f(11, 1), 'Allerheiligen'], [f(12, 25), '1. Weihnachtstag'], [f(12, 26), '2. Weihnachtstag']].forEach(([n, t]) => m.set(n, 'Feiertag (' + t + ')'));
+  for (const r of S.cfg.ruhetage || []) {
+    if (/^\d{2}-\d{2}$/.test(r.d)) { const n = D.parse(y + '-' + r.d); if (n !== null) m.set(n, r.n); }
+    else { const n = D.parse(r.d); if (n !== null && new Date(n * 864e5).getUTCFullYear() === y) m.set(n, r.n); }
+  }
+  holCache.set(y, m); return m;
+}
+function holiday(n) { const y = new Date(n * 864e5).getUTCFullYear(); return holidaysOf(y).get(n) || ''; }
+function isWorkday(n) { return D.wd(n) <= 5 && !holiday(n); }
+function addWorkdays(n, k) { // Excel WORKDAY: k=0 gibt das Datum selbst zurück
+  let d = n, step = k >= 0 ? 1 : -1, left = Math.abs(Math.trunc(k));
+  while (left > 0) { d += step; if (isWorkday(d)) left--; }
+  return d;
+}
+function stdAm(mc, ds) { if (!mc) return 0; const h = (mc.stdHist || []).filter(x => x.bis && ds <= x.bis).sort((a, b) => a.bis < b.bis ? -1 : 1); return h.length ? h[0].std : mc.std; }
+function kapa(mid, n, skipIds) {
+  const mc = machine(mid); const ds = D.str(n);
+  const ov = (S.kap.get(ds)?.tage || {})[mid] || {};
+  const hol = holiday(n); const work = D.wd(n) <= 5;
+  const grund = numOr(ov.grund) ?? (work ? stdAm(mc, ds) : 0);
+  const ausfall = numOr(ov.ausfall) ?? (hol && work ? grund : 0);
+  const bem = (ov.bemerkung !== undefined && ov.bemerkung !== null) ? ov.bemerkung : (hol && work ? hol : '');
+  const verf = Math.max(0, grund - ausfall);
+  const list = (S.byMD.get(mid + '|' + ds) || []).filter(e => !skipIds || !skipIds.has(e.id));
+  const geplant = list.reduce((s, e) => s + numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0), 0);
+  return { grund, ausfall, verf, geplant, rest: verf - geplant, bem, list, hol, ov };
+}
+function auslastungKlasse(c) {
+  if (c.geplant > c.verf + 1e-6) return 'bad';
+  if (c.verf <= 0) return 'none';
+  const u = c.geplant / c.verf;
+  if (u >= 0.8) return 'ok'; if (u > 0) return 'warn'; return 'idle';
+}
+/* Verteilung eines Auftrags auf freie Kapazität ab Startdatum */
+function verteilen(mid, start, laufzeit, ruest, stueck, opts = {}) {
+  const total = laufzeit + ruest; const days = []; let rem = total;
+  if (opts.einTag || total <= 0) { let s0 = start; while (kapa(mid, s0).verf <= 0 && s0 < start + 30) s0++; if (s0 >= start + 30) s0 = start; days.push({ n: s0, h: total }); if (s0 !== start) days.warn = 'Starttag ohne Kapazität – auf ' + D.fmt(s0) + ' verschoben.'; }
+  else {
+    let n = start;
+    for (let i = 0; i < 180 && rem > 1e-6; i++, n++) {
+      const c = kapa(mid, n, opts.skip);
+      const already = days.reduce((s, d) => s + (d.n === n ? d.h : 0), 0);
+      const free = c.verf - c.geplant - already;
+      if (free <= 1e-6) continue;
+      const take = Math.min(free, rem); days.push({ n, h: Math.round(take * 100) / 100 }); rem -= take;
+    }
+    if (rem > 1e-6) { if (days.length) days[days.length - 1].h += rem; else days.push({ n: start, h: rem }); days.warn = 'Nicht genug freie Kapazität in den nächsten 180 Tagen – Rest auf den letzten Tag gelegt.'; }
+  }
+  let rr = ruest, sAssigned = 0;
+  const out = days.map((d, i) => { const r = Math.min(rr, d.h); rr -= r; const l = Math.max(0, d.h - r); return { datum: D.str(d.n), n: d.n, ruestzeit: r, laufzeit: Math.round(l * 100) / 100, stueck: 0 }; });
+  const st = numOr(stueck, 0);
+  out.forEach((d, i) => { if (i === out.length - 1) d.stueck = st - sAssigned; else { d.stueck = laufzeit > 0 ? Math.round(st * d.laufzeit / laufzeit) : (i === 0 ? st : 0); sAssigned += d.stueck; } });
+  if (laufzeit <= 0 && out.length) { out.forEach((d, i) => d.stueck = i === 0 ? st : 0); }
+  out.warn = days.warn;
+  return out;
+}
+function planDocId(mid, datum) { return mid + '_' + D.weekId(D.parse(datum)); }
+async function addEntry(mid, entry) {
+  const docId = planDocId(mid, entry.datum); const id = entry.id || uid('e'); const e = Object.assign({}, entry); delete e.id; delete e.maschine; delete e.docId; delete e.n;
+  stamp(e);
+  if (S.planDocs.has(docId)) await Store.update('plan', docId, { e: { [id]: e } });
+  else { await Store.set('plan', docId, { maschine: mid, woche: D.weekId(D.parse(entry.datum)), e: { [id]: e } }); S.planDocs.set(docId, { maschine: mid, e: { [id]: e } }); }
+  return id;
+}
+async function removeEntry(x) { await Store.update('plan', x.docId, { e: { [x.id]: null } }); }
+async function moveEntry(x, mid, datum, patch = {}) {
+  const newDoc = planDocId(mid, datum);
+  const e = Object.assign({}, x, patch, { datum }); delete e.id; delete e.docId; delete e.maschine;
+  stamp(e);
+  if (newDoc === x.docId) await Store.update('plan', x.docId, { e: { [x.id]: e } });
+  else { await addEntry(mid, Object.assign(e, { id: x.id })); await removeEntry(x); }
+}
+async function setKap(datum, mid, vals) {
+  const cur = S.kap.get(datum);
+  if (cur) await Store.update('kapazitaet', datum, { tage: { [mid]: vals } });
+  else await Store.set('kapazitaet', datum, { tage: { [mid]: vals } });
+}
+
+/* ===================== Lieferhistorie / Kennzahlen ===================== */
+function gelAll() {
+  const out = S.gelStatic.slice();
+  for (const [id, g] of S.gelDb) out.push(Object.assign({ _id: id, _db: true }, g));
+  return out;
+}
+function perfOf(best, ist) { const b = D.parse(best), i = D.parse(ist); if (b === null) return ''; const d = b - (i ?? b); return d === 0 ? 'Pünktlich' : d > 0 ? 'Früher' : 'Verspätet'; }
+
+/* ===================== Oberflächen-Grundlagen ===================== */
+function setConn(cls, txt) { const d = $('#connDot'); if (d) { d.className = 'dot ' + cls; $('#connTxt').textContent = txt; } }
+let toastTimer;
+function toast(msg, action) {
+  const h = $('#toastHost'); clearTimeout(toastTimer);
+  h.innerHTML = '<div class="toast" role="status"><span>' + esc(msg) + '</span>' + (action ? '<button type="button" id="toastAct">' + esc(action.label) + '</button>' : '') + '</div>';
+  if (action) $('#toastAct').onclick = () => { h.innerHTML = ''; action.fn(); };
+  toastTimer = setTimeout(() => { h.innerHTML = ''; }, action ? 8000 : 3500);
+}
+function pill(txt, cls = '') { return '<span class="pill ' + cls + '">' + esc(txt) + '</span>'; }
+function perfPill(x) { if (!x.perf) return ''; const c = x.perf === 'Verspätet' ? 'bad' : x.perf === 'Früher' ? 'ok' : 'acc'; const w = x.wochen ? ' ' + (x.wochen > 0 ? '+' : '') + fmtNum(x.wochen, 1) + ' Wo' : ''; return pill(x.perf + w, c); }
+function opts(list, cur, empty) { let h = empty !== undefined ? '<option value="">' + esc(empty) + '</option>' : ''; const arr = list.slice(); if (cur && !arr.includes(cur)) arr.unshift(cur); for (const v of arr) h += '<option' + (v === cur ? ' selected' : '') + ' value="' + esc(v) + '">' + esc(v) + '</option>'; return h; }
+function standListe() { const set = new Set(S.cfg.staende); for (const o of S.orders.values()) if (o.stand) set.add(o.stand); return Array.from(set); }
+function kunden() { const s = new Set(); for (const o of S.orders.values()) if (o.kunde) s.add(o.kunde); return Array.from(s).sort((a, b) => a.localeCompare(b, 'de')); }
+function openOrders(bereich) { const out = []; for (const [id, o] of S.orders) { if (bereich && o.bereich !== bereich) continue; out.push(Object.assign({ _id: id }, o)); } return out; }
+async function profileName(id) {
+  if (!id) return ''; if (S.profiles[id] !== undefined) return S.profiles[id];
+  if (!S.user || !S.user.profiles) return '';
+  try { const ps = await S.user.profiles([id]); S.profiles[id] = (ps && ps[id] && ps[id].name) || ''; } catch (e) { S.profiles[id] = ''; }
+  return S.profiles[id];
+}
+function csv(rows) { return '﻿' + rows.map(r => r.map(v => { if (typeof v === 'number' || (typeof v === 'string' && /^-?\d+\.\d+$/.test(v))) v = String(v).replace('.', ','); v = String(v ?? ''); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(';')).join('\r\n'); }
+async function download(filename, text, type = 'text/csv') {
+  let dl = null; try { dl = window.claude ? await window.claude.use('downloads') : null; } catch (e) { }
+  if (dl) { try { await dl.save({ filename, data: new Blob([text], { type: type + ';charset=utf-8' }) }); toast('Datei bereitgestellt: ' + filename); } catch (e) { toast('Download abgebrochen.'); } return; }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); toast('Datei erstellt: ' + filename); } catch (e) { toast('Download in dieser Ansicht nicht möglich.'); }
+}
+
+/* ===================== Navigation ===================== */
+const ICON = {
+  uebersicht: '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+  auftraege: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  planung: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/>',
+  termin: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>',
+  listen: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 13h6M9 17h4"/>',
+  kennzahlen: '<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>',
+  stammdaten: '<path d="M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>'
+};
+const VIEWS = [
+  ['uebersicht', 'Übersicht'], ['auftraege', 'Aufträge'], ['planung', 'Maschinenplanung'], ['termin', 'Terminrechner'], ['listen', 'Listen'], ['kennzahlen', 'Kennzahlen & Lieferungen'], ['stammdaten', 'Stammdaten & Einstellungen']
+];
+function renderNav() {
+  $('#nav').innerHTML = VIEWS.map(([id, t]) => '<a href="#' + id + '"' + (S.view === id ? ' aria-current="page"' : '') + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[id] + '</svg><span>' + t + '</span></a>').join('');
+}
+function route() {
+  const h = (location.hash || '').replace('#', '');
+  S.view = VIEWS.some(v => v[0] === h) ? h : 'uebersicht';
+  renderNav(); renderView(true);
+}
+let rq = 0;
+function scheduleRender() { if (rq) return; rq = requestAnimationFrame(() => { rq = 0; renderView(false); }); }
+function renderView(full) {
+  const V = VIEW_IMPL[S.view];
+  $('#title').textContent = VIEWS.find(v => v[0] === S.view)[1];
+  $('#subtitle').textContent = V.sub ? V.sub() : '';
+  if (full) { $('#toolbar').innerHTML = V.toolbar ? V.toolbar() : ''; V.bindToolbar && V.bindToolbar(); }
+  if (!S.loaded.auftraege) { $('#body').innerHTML = '<div class="empty">Daten werden geladen …</div>'; return; }
+  const y = window.scrollY;
+  $('#body').innerHTML = V.body();
+  V.bindBody && V.bindBody();
+  if (!full) window.scrollTo(0, y); else window.scrollTo(0, 0);
+}
+
+/* ===================== Übersicht (Blatt Dashboard) ===================== */
+const VIEW_IMPL = {};
+VIEW_IMPL.uebersicht = {
+  sub() { const t = D.today(); return D.dayName(t) + ', ' + D.fmt(t) + ' · KW ' + D.kw(t); },
+  body() {
+    const os = openOrders('RS').map(o => ({ o, x: enrich(o) }));
+    const today = D.today();
+    const total = os.length;
+    const ueber = os.filter(r => r.x.ueberfaellig);
+    const versp = os.filter(r => r.x.perf === 'Verspätet');
+    const cnt = { prof: 0, nicht: 0, rand: 0, ein: 0 };
+    os.forEach(r => { const e = eingeplantNorm(r.o.eingeplant); if (e === 'profiliert') cnt.prof++; else if (e === 'noch nicht eingeplant') cnt.nicht++; else if (e === 'Rändelrolle') cnt.rand++; else cnt.ein++; });
+    const perfC = { v: versp.length, p: os.filter(r => r.x.perf === 'Pünktlich').length, f: os.filter(r => r.x.perf === 'Früher').length };
+    // Liefertreue letzte 12 Monate
+    const g = gelAll(); const since = today - 365; let gp = 0, gv = 0;
+    g.forEach(r => { const n = D.parse(r.ltIst || r.ltBest); if (n === null || n < since || n > today) return; if (r.perf === 'Verspätet') gv++; else if (r.perf === 'Pünktlich' || r.perf === 'Früher') gp++; });
+    const lt = gp + gv ? gp / (gp + gv) : NaN;
+    // Ampel: heute + 5 weitere Arbeitstage
+    const days = []; let n = today; while (days.length < 6) { if (D.wd(n) <= 5) days.push(n); n++; }
+    let amp = '<div class="tw"><table class="t ampel"><thead><tr><th>Maschine</th>' + days.map(d => '<th class="num">' + (d === today ? 'Heute' : D.dayShort(d) + ' ' + D.fmtS(d)) + '</th>').join('') + '</tr></thead><tbody>';
+    for (const m of S.cfg.maschinen) {
+      amp += '<tr><td><b>' + esc(m.name) + '</b><div class="hint">' + esc(m.lang) + '</div></td>';
+      for (const d of days) {
+        const c = kapa(m.id, d); const k = auslastungKlasse(c);
+        const pct = c.verf > 0 ? Math.round(c.geplant / c.verf * 100) + ' %' : (c.geplant > 0 ? 'überplant' : '–');
+        amp += '<td class="cell"><div class="amp ' + k + '" data-goplan="' + D.str(d) + '" title="' + esc((c.bem ? c.bem + ' · ' : '') + 'verfügbar ' + fmtNum(c.verf) + ' h, geplant ' + fmtNum(c.geplant) + ' h') + '"><b>' + pct + '</b><span>' + fmtNum(c.geplant) + ' / ' + fmtNum(c.verf) + ' h</span></div></td>';
+      }
+      amp += '</tr>';
+    }
+    amp += '</tbody></table></div><div class="legend"><span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>gut ausgelastet (≥ 80 %)</span><span><i style="background:var(--warn-soft);border:1px solid var(--warn)"></i>freie Kapazität</span><span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>überplant</span><span><i style="background:var(--idle-soft);border:1px solid var(--idle)"></i>nichts geplant</span><span><i style="background:var(--panel-2);border:1px solid var(--line-2)"></i>keine Kapazität (Ausfall, Feiertag)</span></div>';
+    // Handlungsbedarf
+    const soon = addWorkdays(today, 10);
+    const todo = os.filter(r => r.x.ueberfaellig || (eingeplantNorm(r.o.eingeplant) === 'noch nicht eingeplant' && D.parse(r.o.ltIst || r.o.ltBest) !== null && D.parse(r.o.ltIst || r.o.ltBest) <= soon))
+      .sort((a, b) => (D.parse(a.o.ltIst || a.o.ltBest) ?? 9e9) - (D.parse(b.o.ltIst || b.o.ltBest) ?? 9e9));
+    let td = todo.length ? '<div class="tw"><table class="t"><thead><tr><th>Termin</th><th>FA</th><th>Artikel</th><th>Kunde</th><th>Stand</th><th>Grund</th></tr></thead><tbody>' + todo.slice(0, 12).map(r => '<tr class="click" data-order="' + esc(r.o._id) + '"><td class="nowrap">' + D.fmt(r.o.ltIst || r.o.ltBest) + '</td><td class="mono">' + esc(r.o.fa) + '</td><td class="clip">' + esc(r.x.bez || r.o.artikel) + '</td><td class="clip">' + esc(r.o.kunde) + '</td><td class="clip">' + esc(r.o.stand) + '</td><td>' + (r.x.ueberfaellig ? pill('Termin überschritten', 'bad') : pill('nicht eingeplant', 'warn')) + '</td></tr>').join('') + '</tbody></table></div>' + (todo.length > 12 ? '<div class="tablefoot"><span>' + (todo.length - 12) + ' weitere</span><a href="#auftraege" data-filter="todo">Alle in der Auftragsliste zeigen</a></div>' : '') : '<div class="empty">Keine überfälligen oder kurzfristig ungeplanten Aufträge.</div>';
+    // Planungsstand
+    const seg = (v, col, lbl) => v ? '<div style="flex:' + v + ';background:' + col + '" title="' + esc(lbl + ': ' + v) + '">' + v + '</div>' : '';
+    const stand = '<div class="sbar">' + seg(cnt.ein, 'var(--accent)', 'Eingeplant') + seg(cnt.prof, 'var(--ok)', 'Profiliert') + seg(cnt.rand, 'var(--straw)', 'Rändelrolle') + seg(cnt.nicht, 'var(--warn)', 'Noch nicht eingeplant') + '</div>' +
+      '<div class="legend"><span><i style="background:var(--accent)"></i>Eingeplant ' + cnt.ein + ' (' + fmtPct(cnt.ein / total) + ')</span><span><i style="background:var(--ok)"></i>Profiliert ' + cnt.prof + ' (' + fmtPct(cnt.prof / total) + ')</span><span><i style="background:var(--straw)"></i>Rändelrolle ' + cnt.rand + ' (' + fmtPct(cnt.rand / total) + ')</span><span><i style="background:var(--warn)"></i>Noch nicht eingeplant ' + cnt.nicht + ' (' + fmtPct(cnt.nicht / total) + ')</span></div>';
+    const perf = '<div class="sbar">' + seg(perfC.v, 'var(--bad)', 'Verspätet') + seg(perfC.p, 'var(--accent)', 'Pünktlich') + seg(perfC.f, 'var(--ok)', 'Früher') + '</div><div class="legend"><span><i style="background:var(--bad)"></i>Rückstand / verspätet ' + perfC.v + ' (' + fmtPct(perfC.v / total) + ')</span><span><i style="background:var(--accent)"></i>Pünktlich ' + perfC.p + ' (' + fmtPct(perfC.p / total) + ')</span><span><i style="background:var(--ok)"></i>Früher ' + perfC.f + ' (' + fmtPct(perfC.f / total) + ')</span></div><p class="hint">Vergleich bestätigter mit aktuellem Liefertermin (Spalten J und L der Excel).</p>';
+    // Stück je KW und Maschine
+    const mon = D.monday(today); const weeks = []; for (let i = -4; i <= 7; i++) weeks.push(mon + i * 7);
+    const heat = {}; let mx = 0;
+    for (const e of S.entries) { const nn = D.parse(e.datum); if (nn === null) continue; const k = D.weekId(nn) + '|' + e.maschine; heat[k] = heat[k] || { s: 0, h: 0 }; heat[k].s += numOr(e.stueck, 0); heat[k].h += numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0); }
+    Object.values(heat).forEach(v => mx = Math.max(mx, v.h));
+    let ht = '<div class="tw"><table class="t heat"><thead><tr><th>KW</th>' + S.cfg.maschinen.map(m => '<th class="num">' + esc(m.name) + '</th>').join('') + '</tr></thead><tbody>';
+    for (const w of weeks) {
+      ht += '<tr' + (w === mon ? ' style="font-weight:700"' : '') + '><td class="nowrap">' + D.kw(w) + (w === mon ? ' ◂' : '') + '</td>';
+      for (const m of S.cfg.maschinen) { const v = heat[D.weekId(w) + '|' + m.id]; const a = v ? Math.min(1, v.h / (mx || 1)) : 0; ht += '<td class="h" data-goweek="' + D.str(w) + '" style="cursor:pointer;background:color-mix(in srgb, var(--accent) ' + Math.round(a * 45) + '%, transparent)">' + (v ? (v.s ? fmtNum(v.s, 0) + ' Stk' : '') + '<div class="hint">' + fmtNum(v.h) + ' h</div>' : '<span class="muted">–</span>') + '</td>'; }
+      ht += '</tr>';
+    }
+    ht += '</tbody></table></div><p class="hint">Eingeplante Stückzahl und Stunden je Kalenderwoche (Dashboard-Tabelle der Excel). Klick öffnet die Woche im Plan.</p>';
+    // Arbeitsgänge
+    const ag = {}; os.forEach(r => { const s = r.o.stand || '(ohne)'; ag[s] = ag[s] || { n: 0, s: 0 }; ag[s].n++; ag[s].s += numOr(r.o.stueck, 0); });
+    const agl = Object.entries(ag).sort((a, b) => b[1].n - a[1].n); const agm = Math.max(1, ...agl.map(a => a[1].n));
+    const agh = '<div class="blist">' + agl.map(([k, v]) => '<div class="bl"><a href="#auftraege" data-stand="' + esc(k) + '" class="clip" style="color:inherit">' + esc(k) + '</a><div class="tr"><div style="width:' + (v.n / agm * 100) + '%"></div></div><div class="n">' + v.n + ' FA</div><div class="n muted">' + fmtNum(v.s, 0) + ' Stk</div></div>').join('') + '</div>';
+    return '<div class="kpis">' +
+      '<button class="kpi" type="button" data-kpi="all"><span class="k">Offene Fertigungsaufträge</span><span class="v">' + total + '</span><span class="s">Rollen &amp; Strehler</span></button>' +
+      '<button class="kpi ' + (ueber.length ? 'bad' : 'ok') + '" type="button" data-kpi="ueber"><span class="k">Termin überschritten</span><span class="v">' + ueber.length + '</span><span class="s">aktueller Termin liegt in der Vergangenheit</span></button>' +
+      '<button class="kpi ' + (versp.length ? 'warn' : 'ok') + '" type="button" data-kpi="versp"><span class="k">Verspätet gemeldet</span><span class="v">' + versp.length + '</span><span class="s">Termin nach hinten verschoben</span></button>' +
+      '<button class="kpi ' + (cnt.nicht ? 'warn' : 'ok') + '" type="button" data-kpi="nicht"><span class="k">Noch nicht eingeplant</span><span class="v">' + cnt.nicht + '</span><span class="s">' + fmtPct(cnt.nicht / total) + ' der Aufträge</span></button>' +
+      '<a class="kpi" href="#kennzahlen"><span class="k">Liefertreue 12 Monate</span><span class="v">' + fmtPct(lt) + '</span><span class="s">' + (gp + gv) + ' gelieferte Aufträge</span></a>' +
+      '</div>' +
+      '<div class="grid" style="gap:14px">' +
+      '<section class="panel"><h2>Maschinen-Ampel <span class="hint">geplante ÷ verfügbare Stunden, klicken zum Planen</span></h2>' + amp + '</section>' +
+      '<div class="grid g2"><section class="panel"><h2>Handlungsbedarf <span class="hint">überfällig oder in ≤ 10 Arbeitstagen fällig und nicht eingeplant</span></h2>' + td + '</section>' +
+      '<section class="panel"><h2>Planungsstand</h2>' + stand + '<h2 style="margin-top:22px">Termintreue offener Aufträge</h2>' + perf + '</section></div>' +
+      '<div class="grid g2"><section class="panel"><h2>Belegung je Kalenderwoche</h2>' + ht + '</section>' +
+      '<section class="panel"><h2>Aufträge je Arbeitsgang <span class="hint">aktueller Produktionsstand</span></h2>' + agh + '</section></div>' +
+      '</div>';
+  },
+  bindBody() {
+    $$('[data-goplan]').forEach(el => el.onclick = () => { S.ui.plan.week = D.monday(D.parse(el.dataset.goplan)); S.ui.plan.mode = 'woche'; location.hash = 'planung'; });
+    $$('[data-goweek]').forEach(el => el.onclick = () => { S.ui.plan.week = D.parse(el.dataset.goweek); S.ui.plan.mode = 'woche'; location.hash = 'planung'; });
+    $$('[data-kpi]').forEach(el => el.onclick = () => { const k = el.dataset.kpi; const u = S.ui.orders; Object.assign(u, { q: '', stand: '', eing: '', perf: '', bereich: 'RS', page: 0 }); if (k === 'ueber') u.perf = 'ueber'; if (k === 'versp') u.perf = 'Verspätet'; if (k === 'nicht') u.eing = 'noch nicht eingeplant'; location.hash = 'auftraege'; if (S.view === 'auftraege') renderView(true); });
+    $$('[data-stand]').forEach(el => el.onclick = e => { e.preventDefault(); Object.assign(S.ui.orders, { q: '', stand: el.dataset.stand === '(ohne)' ? '' : el.dataset.stand, eing: '', perf: '', bereich: 'RS', page: 0 }); location.hash = 'auftraege'; });
+    $$('[data-filter="todo"]').forEach(el => el.onclick = e => { e.preventDefault(); Object.assign(S.ui.orders, { q: '', stand: '', eing: '', perf: 'todo', bereich: 'RS', page: 0 }); location.hash = 'auftraege'; });
+    $$('[data-order]').forEach(el => el.onclick = () => openOrder(el.dataset.order));
+  }
+};
+
+/* ===================== Aufträge (Blatt Planung_Kundenaufträge) ===================== */
+const OCOLS = [
+  ['kw', 'KW', 1], ['ltBest', 'Best. Liefertermin', 1], ['ltIst', 'Aktueller Termin', 1], ['artikel', 'Artikel', 1], ['bez', 'Bezeichnung', 1], ['kunde', 'Kunde', 1], ['ka', 'Kundenauftrag', 0], ['fa', 'FA', 1], ['stueck', 'Stück', 1], ['stand', 'Produktionsstand', 1], ['eingeplant', 'Eingeplant', 1], ['perf', 'Termin', 1], ['bemerkung', 'Bemerkung', 1],
+  ['typ', 'Typ', 0], ['groesse', 'Größe', 0], ['besch', 'Beschichtung', 0], ['stg', 'Steigung', 0], ['kr', 'Kopierrolle', 0], ['halb', 'Halbfabrikat', 0], ['f34', '3/4-Fabrikat', 0], ['f14', '1/4-Fabrikat', 0], ['nut', 'Nut schleifen', 0], ['nutG', 'Nut geschliffen', 0], ['lieferWochen', 'Lieferzeit (Wo.)', 0], ['gedruckt', 'Gedruckt', 0], ['geplant', 'Geplant (h)', 0], ['sonstige', 'Sonstige Bemerkung', 0]
+];
+function visibleCols() { if (!S.ui.orders.cols) { try { const c = JSON.parse(localStorage.getItem('fp-cols') || 'null'); if (Array.isArray(c)) S.ui.orders.cols = c; } catch (e) { } } return S.ui.orders.cols || OCOLS.filter(c => c[2]).map(c => c[0]); }
+function filteredOrders() {
+  const u = S.ui.orders; const q = norm(u.q); const today = D.today(); const soon = addWorkdays(today, 10);
+  let rows = openOrders(u.bereich === 'alle' ? null : u.bereich).map(o => ({ o, x: enrich(o) }));
+  if (q) rows = rows.filter(r => [r.o.fa, r.o.artikel, r.o.ka, r.o.kunde, r.x.bez, r.o.bemerkung, r.o.stand, r.x.kr, r.x.halb].some(v => norm(v).includes(q)));
+  if (u.stand) rows = rows.filter(r => r.o.stand === u.stand);
+  if (u.eing) rows = rows.filter(r => u.eing === 'eingeplant' ? !['noch nicht eingeplant', 'profiliert', 'Rändelrolle'].includes(eingeplantNorm(r.o.eingeplant)) : eingeplantNorm(r.o.eingeplant) === u.eing);
+  if (u.perf === 'ueber') rows = rows.filter(r => r.x.ueberfaellig);
+  else if (u.perf === 'todo') rows = rows.filter(r => r.x.ueberfaellig || (eingeplantNorm(r.o.eingeplant) === 'noch nicht eingeplant' && (D.parse(r.o.ltIst || r.o.ltBest) ?? 9e9) <= soon));
+  else if (u.perf) rows = rows.filter(r => r.x.perf === u.perf);
+  const key = u.sort, dir = u.dir;
+  const val = r => { switch (key) { case 'kw': case 'ltBest': return D.parse(r.o.ltBest) ?? 9e9; case 'ltIst': return D.parse(r.o.ltIst || r.o.ltBest) ?? 9e9; case 'stueck': return numOr(r.o.stueck, 0); case 'bez': return norm(r.x.bez); case 'perf': return r.x.diff ?? 0; case 'pos': return r.o.pos || 0; default: return norm(r.o[key] ?? r.x[key]); } };
+  rows.sort((a, b) => { const va = val(a), vb = val(b); if (typeof va === 'string' && typeof vb === 'string') { const c = COLL.compare(va, vb); if (c) return c * dir; return (a.o.pos || 0) - (b.o.pos || 0); } if (va < vb) return -dir; if (va > vb) return dir; return (a.o.pos || 0) - (b.o.pos || 0); });
+  return rows;
+}
+VIEW_IMPL.auftraege = {
+  sub() { return 'Kundenaufträge Rollen & Strehler sowie Ausrüstung – Stand, Termine und Einplanung'; },
+  toolbar() {
+    const u = S.ui.orders;
+    return '<div class="toolbar">' +
+      '<div class="seg" role="group" aria-label="Bereich">' + [['RS', 'Rollen & Strehler'], ['AR', 'Ausrüstung'], ['alle', 'Alle']].map(([k, t]) => '<button type="button" data-bereich="' + k + '" aria-pressed="' + (u.bereich === k) + '">' + t + '</button>').join('') + '</div>' +
+      '<label class="f">Suche<input type="search" id="oq" value="' + esc(u.q) + '" placeholder="FA, Artikel, Kunde, Bemerkung"></label>' +
+      '<label class="f">Produktionsstand<select id="ostand">' + opts(standListe(), u.stand, 'Alle') + '</select></label>' +
+      '<label class="f">Eingeplant<select id="oeing"><option value="">Alle</option>' + [['noch nicht eingeplant', 'Noch nicht eingeplant'], ['profiliert', 'Profiliert'], ['Rändelrolle', 'Rändelrolle'], ['eingeplant', 'Eingeplant (KW)']].map(([v, t]) => '<option value="' + v + '"' + (u.eing === v ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></label>' +
+      '<label class="f">Termin<select id="operf"><option value="">Alle</option>' + [['ueber', 'Termin überschritten'], ['todo', 'Handlungsbedarf'], ['Verspätet', 'Verspätet'], ['Pünktlich', 'Pünktlich'], ['Früher', 'Früher']].map(([v, t]) => '<option value="' + v + '"' + (u.perf === v ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></label>' +
+      '<button class="btn ghost" type="button" id="oreset">Filter zurücksetzen</button>' +
+      '<div class="grow"></div>' +
+      '<button class="btn" type="button" id="ocols">Spalten</button>' +
+      '<button class="btn" type="button" id="ocsv">CSV exportieren</button>' +
+      '</div><div id="colpick"></div>';
+  },
+  bindToolbar() {
+    const u = S.ui.orders; let t;
+    $$('[data-bereich]').forEach(b => b.onclick = () => { u.bereich = b.dataset.bereich; u.page = 0; $$('[data-bereich]').forEach(x => x.setAttribute('aria-pressed', x === b)); scheduleRender(); });
+    $('#oq').oninput = e => { clearTimeout(t); t = setTimeout(() => { u.q = e.target.value; u.page = 0; scheduleRender(); }, 150); };
+    $('#ostand').onchange = e => { u.stand = e.target.value; u.page = 0; scheduleRender(); };
+    $('#oeing').onchange = e => { u.eing = e.target.value; u.page = 0; scheduleRender(); };
+    $('#operf').onchange = e => { u.perf = e.target.value; u.page = 0; scheduleRender(); };
+    $('#oreset').onclick = () => { Object.assign(u, { q: '', stand: '', eing: '', perf: '', bereich: 'RS', page: 0 }); const g = $('#gsearch'); if (g) g.value = ''; renderView(true); };
+    $('#ocsv').onclick = exportOrders;
+    $('#ocols').onclick = () => {
+      const host = $('#colpick'); if (host.innerHTML) { host.innerHTML = ''; return; }
+      const vis = visibleCols();
+      host.innerHTML = '<div class="panel" style="margin-bottom:14px"><h2>Sichtbare Spalten</h2><div class="row">' + OCOLS.map(c => '<label class="chk"><input type="checkbox" data-col="' + c[0] + '"' + (vis.includes(c[0]) ? ' checked' : '') + '> ' + c[1] + '</label>').join('') + '</div></div>';
+      $$('[data-col]', host).forEach(cb => cb.onchange = () => { S.ui.orders.cols = $$('[data-col]', host).filter(x => x.checked).map(x => x.dataset.col); try { localStorage.setItem('fp-cols', JSON.stringify(S.ui.orders.cols)); } catch (e) { } scheduleRender(); });
+    };
+  },
+  body() {
+    const u = S.ui.orders; const rows = filteredOrders(); const vis = visibleCols();
+    const cols = OCOLS.filter(c => vis.includes(c[0]));
+    const PAGE = 200; const pages = Math.max(1, Math.ceil(rows.length / PAGE)); if (u.page >= pages) u.page = 0;
+    const slice = rows.slice(u.page * PAGE, u.page * PAGE + PAGE);
+    const stände = standListe(); const eing = S.cfg.eingeplant;
+    let lastKw = null, band = false;
+    const cell = (c, r) => {
+      const o = r.o, x = r.x;
+      switch (c) {
+        case 'kw': return '<td class="nowrap mono">' + esc(x.kw) + '</td>';
+        case 'ltBest': return '<td class="nowrap">' + D.fmt(o.ltBest) + '</td>';
+        case 'ltIst': return '<td class="nowrap">' + (o.ltIst && o.ltIst !== o.ltBest ? D.fmt(o.ltIst) : '<span class="muted">' + D.fmt(o.ltIst || o.ltBest) + '</span>') + '</td>';
+        case 'artikel': return '<td class="mono nowrap">' + esc(o.artikel) + '</td>';
+        case 'bez': return '<td class="clip" title="' + esc(x.bez) + '">' + (x.bez ? esc(x.bez) : '<span class="muted">' + (o.artikel ? 'Artikel nicht in Stammdaten' : '–') + '</span>') + '</td>';
+        case 'fa': return '<td class="mono nowrap">' + (x.nacharbeit ? pill(o.fa || 'Nacharbeit', 'straw') : esc(o.fa)) + '</td>';
+        case 'stueck': return '<td class="num nowrap">' + fmtNum(numOr(o.stueck, 0), 0) + ' <span class="muted">' + esc(x.einheit) + '</span></td>';
+        case 'stand': return '<td><select class="inl" data-inl="stand" data-id="' + esc(o._id) + '" aria-label="Produktionsstand">' + opts(stände, o.stand, '–') + '</select></td>';
+        case 'eingeplant': { const v = eingeplantNorm(o.eingeplant); const list = eing.slice(); const kws = []; for (let i = -1; i < 10; i++) kws.push('KW ' + D.kw(D.today() + i * 7).slice(0, 2)); return '<td>' + (o.bereich === 'AR' ? '<span class="muted">–</span>' : '<select class="inl" data-inl="eingeplant" data-id="' + esc(o._id) + '" aria-label="Eingeplant">' + opts(list.concat(kws.filter(k => !list.includes(k))), v) + '</select>') + '</td>'; }
+        case 'perf': return '<td class="nowrap">' + (x.ueberfaellig ? pill('überfällig', 'bad') + ' ' : '') + perfPill(x) + '</td>';
+        case 'bemerkung': return '<td class="clip" title="' + esc(o.bemerkung) + '">' + esc(o.bemerkung) + '</td>';
+        case 'nutG': return '<td>' + esc(x.nutGeschliffen) + '</td>';
+        case 'gedruckt': return '<td>' + esc(o.gedruckt) + '</td>';
+        case 'geplant': return '<td class="num">' + (x.geplantH ? fmtNum(x.geplantH) : '') + '</td>';
+        case 'lieferWochen': return '<td class="num">' + (x.lieferWochen ?? '') + '</td>';
+        case 'ka': case 'kunde': case 'sonstige': return '<td class="clip">' + esc(o[c]) + '</td>';
+        default: return '<td class="clip">' + esc(x[c] ?? o[c]) + '</td>';
+      }
+    };
+    let h = '<div class="tw"><table class="t" id="otable"><thead><tr><th aria-label="Status"></th>' + cols.map(c => '<th class="sort' + (['stueck', 'geplant', 'lieferWochen'].includes(c[0]) ? ' num' : '') + '" data-sort="' + c[0] + '">' + c[1] + (u.sort === c[0] ? (u.dir > 0 ? ' ▲' : ' ▼') : '') + '</th>').join('') + '</tr></thead><tbody>';
+    for (const r of slice) {
+      if (r.x.kw !== lastKw) { band = !band; lastKw = r.x.kw; }
+      const st = r.x.ueberfaellig ? 'bad' : r.x.perf === 'Verspätet' ? 'warn' : eingeplantNorm(r.o.eingeplant) === 'noch nicht eingeplant' ? '' : 'ok';
+      h += '<tr class="click' + (band && (u.sort === 'kw' || u.sort === 'ltBest') ? ' kwb' : '') + '" data-order="' + esc(r.o._id) + '"><td><span class="stripe ' + st + '"></span></td>' + cols.map(c => cell(c[0], r)).join('') + '</tr>';
+    }
+    if (!slice.length) h += '<tr><td colspan="' + (cols.length + 1) + '"><div class="empty">Keine Aufträge für diese Auswahl. ' + (S.orders.size ? 'Filter zurücksetzen oder Suche ändern.' : 'Legen Sie mit „+ Neuer Auftrag“ den ersten Auftrag an.') + '</div></td></tr>';
+    h += '</tbody></table></div><div class="tablefoot"><span>' + rows.length + ' Aufträge · ' + fmtNum(rows.reduce((s, r) => s + numOr(r.o.stueck, 0), 0), 0) + ' Paar/Satz' + '</span>' +
+      (pages > 1 ? '<span class="row"><button class="btn small" type="button" data-page="-1"' + (u.page === 0 ? ' disabled' : '') + '>‹ Zurück</button> Seite ' + (u.page + 1) + ' / ' + pages + ' <button class="btn small" type="button" data-page="1"' + (u.page >= pages - 1 ? ' disabled' : '') + '>Weiter ›</button></span>' : '') +
+      '<span class="row"><span class="stripe bad"></span> überfällig <span class="stripe warn"></span> verspätet <span class="stripe ok"></span> eingeplant/profiliert</span></div>';
+    return h;
+  },
+  bindBody() {
+    $$('#otable th[data-sort]').forEach(th => th.onclick = () => { const u = S.ui.orders; const k = th.dataset.sort; if (u.sort === k) u.dir = -u.dir; else { u.sort = k; u.dir = 1; } scheduleRender(); });
+    $$('#otable tr[data-order]').forEach(tr => tr.onclick = e => { if (e.target.closest('select')) return; openOrder(tr.dataset.order); });
+    $$('select[data-inl]').forEach(s => { s.onclick = e => e.stopPropagation(); s.onchange = async () => { const id = s.dataset.id; const f = s.dataset.inl; const o = S.orders.get(id); if (!o) return; const patch = stamp({ [f]: s.value }); await write(() => Store.update('auftraege', id, patch), (f === 'stand' ? 'Produktionsstand' : 'Einplanung') + ' gespeichert: ' + (o.fa || o.artikel)); if (f === 'stand' && norm(s.value) === 'geliefert') openDelivered(id); }; });
+    $$('[data-page]').forEach(b => b.onclick = () => { S.ui.orders.page += +b.dataset.page; scheduleRender(); });
+  }
+};
+function exportOrders() {
+  const rows = filteredOrders();
+  const head = ['Bereich', 'Artikelnummer', 'Kundenauftrag', 'Fertigungsauftrag', 'Kundenname', 'Artikelbezeichnung', 'gedruckt', 'Typ', 'Stückzahl', 'Paar/Satz', 'Bestätigter Liefertermin', 'Kalenderwoche', 'Tatsächlicher Liefertermin', 'Tatsächliche Kalenderwoche', 'Produktionsstand', 'Bemerkung', 'Performance', 'Performance in Wochen', 'Performance in Tagen', 'Eingeplant', 'Nut schleifen', 'Nut geschliffen', 'Lieferzeit (Wochen)', 'Größe', 'Beschichtung', 'Steigung', 'Kopierrolle', 'Halbfabrikat', '3/4 Fabrikat', '1/4 Fabrikat', 'Verzögerungsgrund', 'Sonstige Bemerkung'];
+  const data = rows.map(({ o, x }) => [o.bereich === 'AR' ? 'Ausrüstung' : 'Rollen & Strehler', o.artikel, o.ka, o.fa, o.kunde, x.bez, o.gedruckt, x.typ, numOr(o.stueck, 0), x.einheit, D.fmt(o.ltBest), x.kw, D.fmt(o.ltIst || o.ltBest), x.kwIst, o.stand, o.bemerkung, x.perf, x.wochen === null ? '' : Math.round(x.wochen * 100) / 100, x.diff ?? '', eingeplantNorm(o.eingeplant), x.nut, x.nutGeschliffen, x.lieferWochen ?? '', x.groesse, x.besch, x.stg, x.kr, x.halb, x.f34, x.f14, o.grund || '', o.sonstige]);
+  download('Auftragsliste_' + D.str(D.today()) + '.csv', csv([head].concat(data)));
+}
+
+/* ===================== Maschinenplanung (Blätter Auftragsplanung + Kapazitätsübersicht) ===================== */
+VIEW_IMPL.planung = {
+  sub() { const p = S.ui.plan; if (p.mode === 'tabelle') { const m = p.month; return 'Kapazitätsübersicht ' + new Date(m * 864e5).toLocaleDateString('de-DE', { month: 'long', year: 'numeric', timeZone: 'UTC' }); } const w = p.week ?? D.monday(D.today()); return 'KW ' + D.kw(w) + ' · ' + D.fmt(w) + ' – ' + D.fmt(w + 4); },
+  toolbar() {
+    const p = S.ui.plan;
+    return '<div class="toolbar"><div class="seg" role="group" aria-label="Ansicht"><button type="button" data-pmode="woche" aria-pressed="' + (p.mode === 'woche') + '">Wochenplan</button><button type="button" data-pmode="tabelle" aria-pressed="' + (p.mode === 'tabelle') + '">Kapazitätstabelle</button></div>' +
+      '<div class="row"><button class="btn" type="button" data-pnav="-1" aria-label="Zurück">‹</button><button class="btn" type="button" data-pnav="0">Heute</button><button class="btn" type="button" data-pnav="1" aria-label="Weiter">›</button></div>' +
+      '<label class="f">Springe zu Datum<input type="date" id="pjump"></label><div class="grow"></div>' +
+      '<button class="btn" type="button" id="pabs">Ausfall / Urlaub eintragen</button><button class="btn primary" type="button" id="pnew">+ Einplanen</button></div>';
+  },
+  bindToolbar() {
+    const p = S.ui.plan;
+    $$('[data-pmode]').forEach(b => b.onclick = () => { p.mode = b.dataset.pmode; if (p.mode === 'tabelle' && p.month == null) { const d = new Date((p.week ?? D.today()) * 864e5); p.month = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 864e5; } renderView(true); });
+    $$('[data-pnav]').forEach(b => b.onclick = () => {
+      const k = +b.dataset.pnav;
+      if (p.mode === 'woche') p.week = k === 0 ? D.monday(D.today()) : (p.week ?? D.monday(D.today())) + 7 * k;
+      else { const d = new Date((p.month ?? D.today()) * 864e5); p.month = k === 0 ? (() => { const t = new Date(D.today() * 864e5); return Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), 1) / 864e5; })() : Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + k, 1) / 864e5; }
+      $('#subtitle').textContent = this.sub(); scheduleRender();
+    });
+    $('#pjump').onchange = e => { const n = D.parse(e.target.value); if (n === null) return; p.week = D.monday(n); const d = new Date(n * 864e5); p.month = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 864e5; $('#subtitle').textContent = this.sub(); scheduleRender(); };
+    $('#pabs').onclick = () => openAbsence();
+    $('#pnew').onclick = () => openPlanDialog({});
+  },
+  body() { return S.ui.plan.mode === 'tabelle' ? planTable() : planWeek(); },
+  bindBody() {
+    $$('.chip[data-entry]').forEach(c => {
+      c.onclick = e => { e.stopPropagation(); openEntry(c.dataset.entry); };
+      c.ondragstart = e => { e.dataTransfer.setData('text/plain', c.dataset.entry); e.dataTransfer.effectAllowed = 'move'; };
+    });
+    $$('[data-cell]').forEach(d => {
+      d.onclick = () => { const [m, ds] = d.dataset.cell.split('|'); openDay(m, ds); };
+      d.ondragover = e => { e.preventDefault(); d.classList.add('drop'); };
+      d.ondragleave = () => d.classList.remove('drop');
+      d.ondrop = async e => { e.preventDefault(); d.classList.remove('drop'); const id = e.dataTransfer.getData('text/plain'); const x = S.entries.find(z => z.id === id); if (!x) return; const [m, ds] = d.dataset.cell.split('|'); if (x.maschine === m && x.datum === ds) return; await write(() => moveEntry(x, m, ds), 'Verschoben auf ' + machine(m).name + ', ' + D.fmt(ds)); };
+    });
+    $$('[data-kcell]').forEach(td => td.onclick = () => { const [m, ds] = td.dataset.kcell.split('|'); openDay(m, ds); });
+  }
+};
+function planWeek() {
+  const p = S.ui.plan; const w = p.week ?? D.monday(D.today()); p.week = w; const today = D.today();
+  let days = [0, 1, 2, 3, 4].map(i => w + i);
+  [w + 5, w + 6].forEach(d => { if (S.cfg.maschinen.some(m => kapa(m.id, d).verf > 0 || kapa(m.id, d).list.length)) days.push(d); });
+  let h = '<div class="wkwrap"><div class="wk" style="grid-template-columns:150px repeat(' + days.length + ',minmax(150px,1fr));min-width:' + (150 + days.length * 150) + 'px"><div class="hd">Maschine</div>' + days.map(d => '<div class="hd' + (d === today ? ' today' : '') + '">' + D.dayShort(d) + ' ' + D.fmtS(d) + (holiday(d) ? ' <span class="muted" title="' + esc(holiday(d)) + '">●</span>' : '') + '</div>').join('');
+  for (const m of S.cfg.maschinen) {
+    let sv = 0, sg = 0; days.forEach(d => { const c = kapa(m.id, d); sv += c.verf; sg += c.geplant; });
+    h += '<div class="mc">' + esc(m.name) + '<small>' + fmtNum(sg) + ' von ' + fmtNum(sv) + ' h geplant</small><small>' + esc(m.lang) + '</small></div>';
+    for (const d of days) {
+      const c = kapa(m.id, d); const k = auslastungKlasse(c); const pct = c.verf > 0 ? Math.min(100, c.geplant / c.verf * 100) : (c.geplant ? 100 : 0);
+      h += '<div class="dc' + (c.verf <= 0 ? ' off' : '') + '" data-cell="' + m.id + '|' + D.str(d) + '" tabindex="0" aria-label="' + esc(m.name + ' ' + D.fmt(d)) + '">';
+      h += '<div class="cap ' + (k === 'bad' ? 'bad' : k === 'ok' ? 'ok' : 'warn') + '"><div class="tr"><div style="width:' + pct + '%"></div></div><span>' + fmtNum(c.geplant) + '/' + fmtNum(c.verf) + ' h</span></div>';
+      if (c.bem) h += '<div class="note" title="' + esc(c.bem) + '">' + esc(c.bem) + '</div>';
+      for (const e of c.list) {
+        const a = article(e.artikel); const isPers = !a && e.artikel && !/^\d+$/.test(String(e.artikel));
+        const ord = findOrderForEntry(e); const late = ord && enrich(ord).ueberfaellig;
+        h += '<div class="chip' + (isPers ? ' pers' : '') + (late ? ' late' : '') + '" draggable="true" data-entry="' + esc(e.id) + '" title="' + esc((a?.bez || e.artikel || '') + (e.kunde ? ' · ' + e.kunde : '') + (e.fa ? ' · FA ' + e.fa : '') + ' · ' + fmtNum(numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0)) + ' h') + '"><span class="a">' + esc(e.artikel || e.bemerkung || 'Eintrag') + ' · ' + fmtNum(numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0)) + ' h</span><span class="b">' + esc([e.kunde, e.fa ? 'FA ' + e.fa : '', e.stueck ? fmtNum(numOr(e.stueck, 0), 0) + ' Stk' : ''].filter(Boolean).join(' · ') || (a?.bez || '')) + '</span></div>';
+      }
+      h += '</div>';
+    }
+  }
+  h += '</div></div><div class="legend"><span>Klick auf ein Feld: Tag bearbeiten (Kapazität, Ausfall, Einträge). Einträge per Ziehen auf einen anderen Tag oder eine andere Maschine verschieben.</span></div>';
+  return h;
+}
+function findOrderForEntry(e) { if (e.orderId && S.orders.has(e.orderId)) return Object.assign({ _id: e.orderId }, S.orders.get(e.orderId)); if (!e.fa) return null; for (const [id, o] of S.orders) if (String(o.fa) === String(e.fa)) return Object.assign({ _id: id }, o); return null; }
+function planTable() {
+  const p = S.ui.plan; const m0 = p.month ?? (() => { const t = new Date(D.today() * 864e5); return Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), 1) / 864e5; })(); p.month = m0;
+  const d0 = new Date(m0 * 864e5); const m1 = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth() + 1, 1) / 864e5;
+  const ms = S.cfg.maschinen; const today = D.today();
+  let h = '<div class="tw"><table class="t" style="font-size:13px"><thead><tr><th>KW</th><th>Tag</th><th>Datum</th>' + ms.map(m => '<th class="num" title="' + esc(m.lang) + '">' + esc(m.name) + '<div class="hint">verf. / gepl. / Rest</div></th>').join('') + '</tr></thead><tbody>';
+  let lastW = null;
+  for (let n = m0; n < m1; n++) {
+    if (D.wd(n) > 5 && !ms.some(m => kapa(m.id, n).verf > 0 || kapa(m.id, n).list.length)) continue;
+    const wk = D.kw(n);
+    h += '<tr' + (n === today ? ' style="outline:2px solid var(--accent);outline-offset:-2px"' : '') + '><td class="mono">' + (wk !== lastW ? 'KW ' + wk.slice(0, 2) : '') + '</td><td>' + D.dayName(n) + '</td><td class="nowrap">' + D.fmt(n) + '</td>';
+    lastW = wk;
+    for (const m of ms) {
+      const c = kapa(m.id, n); const k = auslastungKlasse(c);
+      h += '<td class="num nowrap" data-kcell="' + m.id + '|' + D.str(n) + '" style="cursor:pointer" title="' + esc((c.bem ? c.bem + ' · ' : '') + 'Grundkapazität ' + fmtNum(c.grund) + ' h, Ausfall ' + fmtNum(c.ausfall) + ' h') + '">' + fmtNum(c.verf) + ' / ' + fmtNum(c.geplant) + ' / <b style="color:var(--' + (c.rest < -1e-6 ? 'bad' : k === 'ok' || c.rest <= 1e-6 ? 'ok' : 'warn') + ')">' + fmtNum(c.rest) + '</b>' + (c.bem ? '<div class="hint clip" style="max-width:140px;margin-left:auto">' + esc(c.bem) + '</div>' : '') + '</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div><p class="hint">Verfügbar = Grundkapazität − Ausfall; Rest = Verfügbar − Geplant (wie im Blatt Kapazitätsübersicht). Klick auf eine Zelle öffnet den Tag.</p>';
+  return h;
+}
+
+/* ===================== Terminrechner (Netzplan Vorarbeit / Tangential, Tabelle2/3, Stammdaten BS–BY) ===================== */
+function stepEnd(start, step, schaetz) {
+  // start = erster Arbeitstag des Schritts (Tageszahl); Rückgabe: Tag, an dem der Schritt fertig ist
+  const r = S.cfg.regeln;
+  if (step.regel === 'nitrieren' || step.regel === 'eifeler') { const t = r[step.regel].tage; const wd = D.wd(start); const off = wd <= 5 ? t[wd - 1] : t[0] + (8 - wd); return start + off; }
+  if (step.regel === 'sauer') return start + (r.sauer.fix || 7);
+  if (step.regel === 'mst') return addWorkdays(start, r.mst.arbeitstage || 2);
+  const dur = dauer(step, schaetz);
+  return addWorkdays(start, dur);
+}
+function dauer(step, schaetz) { const [o, re, p] = [step.o, step.r, step.p].map(v => numOr(v, 0)); const v = schaetz === 'o' ? o : schaetz === 'r' ? re : schaetz === 'p' ? p : (o + 4 * re + p) / 6; return Math.ceil(v - 1e-9); }
+function rechneVorwaerts(steps, startN, schaetz) {
+  let cur = startN; const out = [];
+  for (const s of steps) { const end = stepEnd(cur, s, schaetz); out.push({ s, start: cur, end }); cur = end; }
+  return { rows: out, ende: out.length ? out[out.length - 1].end : cur };
+}
+function rechneRueckwaerts(steps, zielN, schaetz) {
+  // spätester Start, sodass Vorwärtsrechnung spätestens am Zieltag fertig ist
+  for (let s = zielN; s > zielN - 400; s--) { if (!isWorkday(s)) continue; const f = rechneVorwaerts(steps, s, schaetz); if (f.ende <= zielN) return Object.assign(f, { start: s }); }
+  return null;
+}
+function terminState() {
+  if (!S.ui.termin) S.ui.termin = { artikel: '', gruppe: 'Rolle tangential', halbVorhanden: true, modus: 'vor', datum: D.str(D.today()), schaetz: 'pert', aktiv: {}, orderId: null };
+  return S.ui.termin;
+}
+function terminSteps(st) {
+  const route = S.cfg.routen[st.gruppe] || S.cfg.routen['Rolle tangential'];
+  const list = [];
+  if (!st.halbVorhanden) route.vor.forEach((r, i) => list.push({ key: 'v' + i, phase: 'Vorgelagert (Halbfabrikat)', name: r[0], o: r[1], r: r[2], p: r[3], optional: !!r[4], regel: r[5] || '' }));
+  route.kern.forEach((r, i) => list.push({ key: 'k' + i, phase: 'Kernarbeitsschritte', name: r[0], o: r[1], r: r[2], p: r[3], optional: !!r[4], regel: r[5] || '' }));
+  return list;
+}
+function defaultAktiv(st, steps) {
+  const a = article(st.artikel); const b = norm(a?.besch); const aktiv = {};
+  const capKnown = a && ['mikromat', 'maegerle_alt', 'maegerle_neu', 'studer_alt', 'studer_neu'].some(m => capOf(a, m));
+  const profDefault = n => st.gruppe === 'Strehler' ? n.includes('mägerle profilschleifen') : st.gruppe === 'Rolle axial' ? n.includes('studer') : n === 'mikromat';
+  for (const s of steps) {
+    let on = !s.optional; const n = norm(s.name);
+    if (s.optional && a) {
+      if (n.includes('nitrieren')) on = b.includes('nitrieren');
+      else if (n.includes('eifeler')) on = /tin|ticn|tialn|zrn|mforce|mpower|ticral|altic/.test(b);
+      else if (n.includes('polieren')) on = b.includes('polieren');
+      else if (n.includes('reinigen')) on = b.includes('reinigen');
+      else if (n.includes('nut')) on = norm(a.nut) === 'ja';
+      else if (!capKnown && (n === 'mikromat' || n.includes('mägerle profilschleifen') || n.includes('studer'))) on = profDefault(n);
+      else if (n === 'mikromat') on = capOf(a, 'mikromat').startsWith('ja');
+      else if (n.includes('mägerle profilschleifen')) on = st.gruppe === 'Strehler' || (!capOf(a, 'mikromat').startsWith('ja') && (capOf(a, 'maegerle_alt').startsWith('ja') || capOf(a, 'maegerle_neu').startsWith('ja')));
+      else if (n.includes('studer')) on = capOf(a, 'studer_alt').startsWith('ja') || capOf(a, 'studer_neu').startsWith('ja');
+      else if (n.includes('außenschleifen')) on = true;
+      else if (n.includes('schleifen anschnitt') || n.includes('fräsen gewindeprofil')) on = st.gruppe === 'Strehler';
+    } else if (s.optional) {
+      on = (n === 'mikromat' || n.includes('mägerle profilschleifen') || n.includes('studer')) ? profDefault(n) : /außenschleifen/.test(n) || (st.gruppe === 'Strehler' && /schleifen anschnitt|fräsen gewindeprofil/.test(n));
+    }
+    aktiv[s.key] = on;
+  }
+  return aktiv;
+}
+VIEW_IMPL.termin = {
+  sub() { return 'Rückwärts- und Vorwärtsterminierung nach Netzplan (PERT) mit den Versandregeln der externen Lieferanten'; },
+  body() {
+    const st = terminState(); const a = article(st.artikel);
+    const steps = terminSteps(st);
+    if (!st._init) { st.aktiv = defaultAktiv(st, steps); st._init = true; }
+    const act = steps.filter(s => st.aktiv[s.key]);
+    const zielN = D.parse(st.datum) ?? D.today();
+    const res = st.modus === 'vor' ? rechneVorwaerts(act, zielN, st.schaetz) : rechneRueckwaerts(act, zielN, st.schaetz);
+    const ord = st.orderId ? S.orders.get(st.orderId) : null;
+    let h = '<div class="grid g2" style="align-items:start"><section class="panel"><h2>Eingaben</h2><div class="fg">' +
+      '<label class="f span2">Artikelnummer (optional)<div class="ac"><input type="text" id="tart" value="' + esc(st.artikel) + '" placeholder="z. B. 75359700" autocomplete="off"><div class="aclist" id="tartl" hidden></div></div><span class="hint">' + (a ? esc(a.bez) + ' · ' + esc(a.grp) + ' · ' + esc(a.besch || 'keine Beschichtung') : (st.artikel ? 'Artikel nicht gefunden' : 'Übernimmt Produktgruppe, Beschichtung, Nut und Maschinen-Eignung aus den Stammdaten.')) + '</span></label>' +
+      '<label class="f">Produktgruppe<select id="tgrp">' + Object.keys(S.cfg.routen).map(g => '<option' + (g === st.gruppe ? ' selected' : '') + '>' + esc(g) + '</option>').join('') + '</select></label>' +
+      '<label class="f">Halbfabrikat<select id="thalb"><option value="1"' + (st.halbVorhanden ? ' selected' : '') + '>am Lager vorhanden</option><option value="0"' + (!st.halbVorhanden ? ' selected' : '') + '>muss gefertigt werden</option></select></label>' +
+      '<div class="f span2">Richtung<div class="seg" role="group"><button type="button" data-tmod="vor" aria-pressed="' + (st.modus === 'vor') + '">Vorwärts: Wann ist es fertig?</button><button type="button" data-tmod="rueck" aria-pressed="' + (st.modus === 'rueck') + '">Rückwärts: Wann muss ich starten?</button></div></div>' +
+      '<label class="f">' + (st.modus === 'vor' ? 'Startdatum' : 'Wunsch-Liefertermin') + '<input type="date" id="tdat" value="' + esc(st.datum) + '"></label>' +
+      '<label class="f">Schätzung<select id="tsch">' + [['pert', 'PERT (o + 4·r + p) / 6'], ['o', 'Optimistisch'], ['r', 'Realistisch'], ['p', 'Pessimistisch']].map(([v, t]) => '<option value="' + v + '"' + (st.schaetz === v ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></label>' +
+      '</div><h2 style="margin-top:18px">Arbeitsschritte <span class="hint">Häkchen setzen, welche Schritte anfallen</span></h2><div class="tw"><table class="t steps"><thead><tr><th></th><th>Schritt</th><th class="num">Opt.</th><th class="num">Real.</th><th class="num">Pess.</th><th class="num">Dauer</th></tr></thead><tbody>';
+    let ph = '';
+    for (const s of steps) {
+      if (s.phase !== ph) { ph = s.phase; h += '<tr><td colspan="6" class="sect" style="padding-top:12px">' + esc(ph) + '</td></tr>'; }
+      const rr = S.cfg.regeln[s.regel];
+      h += '<tr><td><input type="checkbox" data-tstep="' + s.key + '"' + (st.aktiv[s.key] ? ' checked' : '') + (s.optional ? '' : ' disabled') + ' aria-label="' + esc(s.name) + '"></td><td>' + esc(s.name) + (s.optional ? ' <span class="hint">(optional)</span>' : '') + (rr ? '<div class="hint">Regel: ' + esc(rr.name) + '</div>' : '') + '</td><td class="num">' + s.o + '</td><td class="num">' + s.r + '</td><td class="num">' + s.p + '</td><td class="num">' + (rr ? (rr.tage ? 'je Wochentag' : rr.fix ? rr.fix + ' KT' : (rr.arbeitstage || 2) + ' AT') : dauer(s, st.schaetz) + ' AT') + '</td></tr>';
+    }
+    h += '</tbody></table></div><p class="hint">AT = Arbeitstage (Mo–Fr ohne Feiertage), KT = Kalendertage. Teiltage werden aufgerundet. Werte unter „Stammdaten & Einstellungen → Terminregeln“ änderbar.</p></section>';
+    h += '<section class="panel"><h2>Ergebnis</h2>';
+    if (!res) h += '<div class="empty">Kein Start innerhalb eines Jahres möglich.</div>';
+    else {
+      const big = st.modus === 'vor' ? res.ende : res.start;
+      h += '<div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kpi" style="cursor:default"><span class="k">' + (st.modus === 'vor' ? 'Voraussichtlich fertig' : 'Spätester Start') + '</span><span class="v">' + D.fmt(big) + '</span><span class="s">' + D.dayName(big) + ' · KW ' + D.kw(big) + '</span></div>' +
+        '<div class="kpi" style="cursor:default"><span class="k">Durchlaufzeit</span><span class="v">' + (res.rows.length ? fmtNum((res.ende - (st.modus === 'vor' ? (res.rows[0]?.start ?? res.ende) : res.start)) / 7, 1) + ' Wo' : '–') + '</span><span class="s">' + (res.rows.length ? (res.ende - (res.rows[0]?.start ?? res.ende)) + ' Kalendertage' : '') + '</span></div></div>';
+      if (st.modus === 'rueck' && res.start < D.today()) h += '<div class="banner" style="background:var(--bad-soft);border-color:var(--bad)">Der späteste Start liegt in der Vergangenheit – der Wunschtermin ist mit diesen Schritten nicht zu halten.</div>';
+      h += '<div class="tw"><table class="t"><thead><tr><th>Schritt</th><th>Beginn</th><th>Fertig</th><th class="num">KT</th></tr></thead><tbody>' + res.rows.map(r => '<tr><td>' + esc(r.s.name) + '</td><td class="nowrap">' + D.dayShort(r.start) + ' ' + D.fmt(r.start) + '</td><td class="nowrap">' + D.dayShort(r.end) + ' ' + D.fmt(r.end) + '</td><td class="num">' + (r.end - r.start) + '</td></tr>').join('') + '</tbody></table></div>';
+    }
+    if (a) { const w = wochenAusPunkten(a.pkt); h += '<p class="hint" style="margin-top:12px">Faustregel aus den Stammdaten: <b>' + w + ' Wochen</b> Lieferzeit (' + a.pkt + ' Punkte für Beschichtung, Sonderprofil, Nut, Polieren usw.; 0 P = 2 Wo, 1 P = 3 Wo, 2 P = 4 Wo, 3 P = 5 Wo, ab 4 P = 6 Wo).</p>'; }
+    if (ord && res && st.modus === 'vor') h += '<div class="row" style="margin-top:12px"><button class="btn primary" type="button" id="tapply">Als aktuellen Liefertermin für FA ' + esc(ord.fa) + ' übernehmen</button></div>';
+    h += '</section></div>';
+    return h;
+  },
+  bindBody() {
+    const st = terminState();
+    const re = () => scheduleRender();
+    const art = $('#tart'); bindArticleAC(art, $('#tartl'), nr => { st.artikel = nr; const a = article(nr); if (a && S.cfg.routen[canonGroup(a.grp)]) st.gruppe = canonGroup(a.grp); st._init = false; re(); });
+    art.onchange = () => { if (st.artikel !== art.value.trim()) { st.artikel = art.value.trim(); const a = article(st.artikel); if (a && S.cfg.routen[canonGroup(a.grp)]) st.gruppe = canonGroup(a.grp); st._init = false; re(); } };
+    $('#tgrp').onchange = e => { st.gruppe = e.target.value; st._init = false; re(); };
+    $('#thalb').onchange = e => { st.halbVorhanden = e.target.value === '1'; st._init = false; re(); };
+    $$('[data-tmod]').forEach(b => b.onclick = () => { st.modus = b.dataset.tmod; re(); });
+    $('#tdat').onchange = e => { if (e.target.value) { st.datum = e.target.value; re(); } };
+    $('#tsch').onchange = e => { st.schaetz = e.target.value; re(); };
+    $$('[data-tstep]').forEach(c => c.onchange = () => { st.aktiv[c.dataset.tstep] = c.checked; re(); });
+    const ap = $('#tapply'); if (ap) ap.onclick = async () => { const steps = terminSteps(st).filter(s => st.aktiv[s.key]); const r = rechneVorwaerts(steps, D.parse(st.datum), st.schaetz); await write(() => Store.update('auftraege', st.orderId, stamp({ ltIst: D.str(r.ende) })), 'Aktueller Liefertermin gesetzt: ' + D.fmt(r.ende)); };
+  }
+};
+function canonGroup(g) { const n = norm(g); if (n === 'strehler') return 'Strehler'; if (n === 'rolle axial') return 'Rolle axial'; if (n.startsWith('rolle')) return 'Rolle tangential'; return 'Rolle tangential'; }
+function bindArticleAC(input, list, onPick) {
+  let sel = -1, items = [];
+  const close = () => { list.hidden = true; sel = -1; };
+  input.addEventListener('input', () => {
+    const q = input.value.trim(); if (q.length < 3) { close(); return; }
+    items = searchArticles(q, 12);
+    if (!items.length) { close(); return; }
+    list.innerHTML = items.map((a, i) => '<button type="button" data-i="' + i + '"><span class="mono">' + esc(a.nr) + '</span> · ' + esc(a.bez) + ' <span class="muted">' + esc(a.grp) + '</span></button>').join('');
+    list.hidden = false;
+    $$('button', list).forEach(b => b.onmousedown = e => { e.preventDefault(); const a = items[+b.dataset.i]; input.value = a.nr; close(); onPick(a.nr); });
+  });
+  input.addEventListener('keydown', e => {
+    if (list.hidden) return; const bs = $$('button', list);
+    if (e.key === 'ArrowDown') { sel = Math.min(bs.length - 1, sel + 1); e.preventDefault(); } else if (e.key === 'ArrowUp') { sel = Math.max(0, sel - 1); e.preventDefault(); } else if (e.key === 'Enter' && sel >= 0) { e.preventDefault(); const a = items[sel]; input.value = a.nr; close(); onPick(a.nr); return; } else if (e.key === 'Escape') { close(); return; }
+    bs.forEach((b, i) => b.classList.toggle('sel', i === sel));
+  });
+  input.addEventListener('blur', () => setTimeout(close, 150));
+}
+function searchArticles(q, limit = 100) {
+  const n = norm(q); const out = []; if (!S.master) return out;
+  const seen = new Set();
+  for (const [nr] of S.overrides) { const a = article(nr); if (a && (norm(a.nr).includes(n) || norm(a.bez).includes(n) || norm(a.kr).includes(n))) { out.push(a); seen.add(nr); } }
+  const exact = S.masterIdx.get(q.trim()); if (exact !== undefined && !seen.has(q.trim())) { out.unshift(article(q.trim())); seen.add(q.trim()); }
+  for (let i = 0; i < S.master.length && out.length < limit; i++) { const r = S.master[i]; if (seen.has(r[0])) continue; if (r[0].includes(n) || norm(r[6]).includes(n) || norm(r[1]) === n) { out.push(article(r[0])); seen.add(r[0]); } }
+  return out.slice(0, limit);
+}
+
+/* ===================== Listen (Priolisten, Nitrieren, Halbfabrikat-Bestand / Tabelle4) ===================== */
+VIEW_IMPL.listen = {
+  sub() { return 'Arbeitsplatz-Prioritätenlisten, Sammellisten für externe Lieferanten und Halbfabrikat-Bedarf'; },
+  toolbar() { const t = S.ui.listen.tab; return '<div class="subtabs">' + [['platz', 'Prioritätenliste Arbeitsplatz'], ['extern', 'Sammelliste Extern (z. B. Nitrieren)'], ['halb', 'Halbfabrikat-Bedarf']].map(([k, l]) => '<button type="button" data-ltab="' + k + '" aria-pressed="' + (t === k) + '">' + l + '</button>').join('') + '</div>'; },
+  bindToolbar() { $$('[data-ltab]').forEach(b => b.onclick = () => { S.ui.listen.tab = b.dataset.ltab; renderView(true); }); },
+  body() { const t = S.ui.listen.tab; return t === 'platz' ? listePlatz() : t === 'extern' ? listeExtern() : listeHalb(); },
+  bindBody() {
+    const L = S.ui.listen;
+    const sp = $('#lstand'); if (sp) sp.onchange = e => { L.stand = e.target.value; scheduleRender(); };
+    const se = $('#lext'); if (se) se.onchange = e => { L.ext = e.target.value; scheduleRender(); };
+    const nf = $('#lnurfehl'); if (nf) nf.onchange = e => { L.nurFehl = e.target.checked; scheduleRender(); };
+    $$('[data-order]').forEach(el => el.onclick = e => { if (e.target.closest('input')) return; openOrder(el.dataset.order); });
+    $$('input[data-bestand]').forEach(inp => { inp.onclick = e => e.stopPropagation(); inp.onchange = async () => { const k = inp.dataset.bestand; const v = pos(inp.value, 0); inp.value = v; const ex = S.bestand.has(k); await write(() => ex ? Store.update('bestand', k, stamp({ lager: v })) : Store.set('bestand', k, stamp({ lager: v })), 'Lagerbestand gespeichert'); }; });
+    const ex = $('#lcsv'); if (ex) ex.onclick = () => { const t = $('#ltable'); const rows = $$('tr', t).map(tr => $$('th,td', tr).map(c => { const i = c.querySelector('input'); return i ? i.value : c.textContent.trim(); })); download(($('#ltable').dataset.name || 'Liste') + '_' + D.str(D.today()) + '.csv', csv(rows)); };
+  }
+};
+function listePlatz() {
+  const L = S.ui.listen; const all = openOrders(null);
+  const rows = all.filter(o => o.stand === L.stand).map(o => ({ o, x: enrich(o) })).sort((a, b) => (D.parse(a.o.ltIst || a.o.ltBest) ?? 9e9) - (D.parse(b.o.ltIst || b.o.ltBest) ?? 9e9));
+  return '<div class="toolbar"><label class="f">Arbeitsplatz / Produktionsstand<select id="lstand">' + opts(standListe(), L.stand) + '</select></label><div class="grow"></div><span class="hint">Stand: ' + D.fmt(D.today()) + '</span><button class="btn" type="button" id="lcsv">CSV exportieren</button></div>' +
+    '<div class="tw"><table class="t" id="ltable" data-name="Prioliste_' + esc(L.stand.replace(/[^\wäöüÄÖÜ]+/g, '_')) + '"><thead><tr><th class="num">Prio</th><th>Artikel</th><th>FA</th><th>Bezeichnung</th><th class="num">Stück</th><th>Kundenliefertermin</th><th>Kunde</th><th>Bemerkung</th></tr></thead><tbody>' +
+    (rows.length ? rows.map((r, i) => '<tr class="click" data-order="' + esc(r.o._id) + '"><td class="num">' + (i + 1) + '</td><td class="mono">' + esc(r.o.artikel) + '</td><td class="mono">' + esc(r.o.fa) + '</td><td class="clip">' + esc(r.x.bez) + '</td><td class="num">' + fmtNum(numOr(r.o.stueck, 0), 0) + ' ' + esc(r.x.einheit) + '</td><td class="nowrap">' + (r.x.kwIst ? 'KW ' + esc(r.x.kwIst) + ' · ' + D.fmt(r.o.ltIst || r.o.ltBest) : '<span class="muted">ohne Termin</span>') + (r.x.ueberfaellig ? ' ' + pill('überfällig', 'bad') : '') + '</td><td class="clip">' + esc(r.o.kunde) + '</td><td class="clip">' + esc(r.o.bemerkung) + '</td></tr>').join('') : '<tr><td colspan="8"><div class="empty">Aktuell keine Aufträge an diesem Arbeitsplatz.</div></td></tr>') +
+    '</tbody></table></div><p class="hint">Sortiert nach aktuellem Liefertermin – ersetzt die Blätter „Priolisten Innen- und Flachschleifen“.</p>';
+}
+function listeExtern() {
+  const L = S.ui.listen; const ext = standListe().filter(s => /^extern/i.test(s));
+  const rows = openOrders(null).filter(o => o.stand === L.ext).map(o => ({ o, x: enrich(o) })).sort((a, b) => (D.parse(a.o.ltIst || a.o.ltBest) ?? 9e9) - (D.parse(b.o.ltIst || b.o.ltBest) ?? 9e9));
+  const sum = rows.reduce((s, r) => s + r.x.stueckEinzel, 0);
+  return '<div class="toolbar"><label class="f">Externer Arbeitsgang<select id="lext">' + opts(ext, L.ext) + '</select></label><div class="grow"></div><span class="hint">Stand: ' + D.fmt(D.today()) + '</span><button class="btn" type="button" id="lcsv">CSV exportieren</button></div>' +
+    '<div class="tw"><table class="t" id="ltable" data-name="Sammelliste_' + esc(L.ext.replace(/[^\wäöüÄÖÜ]+/g, '_')) + '"><thead><tr><th>Artikelnummer</th><th>Kundenname</th><th>Bezeichnung</th><th>Auftrag intern</th><th class="num">Satzmenge</th><th class="num">Stückzahl</th><th>Liefertermin</th></tr></thead><tbody>' +
+    (rows.length ? rows.map(r => '<tr class="click" data-order="' + esc(r.o._id) + '"><td class="mono">' + esc(r.o.artikel) + '</td><td class="clip">' + esc(r.o.kunde) + '</td><td class="clip">' + esc(r.x.bez) + '</td><td class="mono">' + esc(r.o.fa) + '</td><td class="num">' + fmtNum(numOr(r.o.stueck, 0), 0) + ' ' + esc(r.x.einheit) + '</td><td class="num">' + fmtNum(r.x.stueckEinzel, 0) + '</td><td>' + (r.x.kwIst ? esc(r.x.kwIst) : '<span class="muted">ohne Termin</span>') + '</td></tr>').join('') + '<tr><td colspan="5"><b>Summe</b></td><td class="num"><b>' + fmtNum(sum, 0) + '</b></td><td></td></tr>' : '<tr><td colspan="7"><div class="empty">Keine Aufträge mit diesem Produktionsstand.</div></td></tr>') +
+    '</tbody></table></div><p class="hint">Stückzahl = Satzmenge × Einzelteile je Paar/Satz (Rolle tangential/radial 2, Rolle axial 3, Strehler 4) – wie im Blatt „Nitrieren“.</p>';
+}
+function listeHalb() {
+  const L = S.ui.listen; const agg = new Map();
+  for (const o of openOrders(null)) { const x = enrich(o); const h = x.halb; if (!h || h === 'N/A' || h === 'prüfen') continue; const g = agg.get(h) || { n: 0, bedarf: 0, orders: [] }; g.n++; g.bedarf += x.stueckEinzel; g.orders.push(o.fa); agg.set(h, g); }
+  let rows = Array.from(agg.entries()).map(([h, g]) => { const lager = numOr(S.bestand.get(h)?.lager, null); return { h, g, lager, fehl: lager === null ? null : Math.max(0, g.bedarf - lager), a: article(h) }; });
+  if (L.nurFehl) rows = rows.filter(r => r.fehl === null || r.fehl > 0);
+  rows.sort((a, b) => (b.fehl ?? b.g.bedarf) - (a.fehl ?? a.g.bedarf));
+  return '<div class="toolbar"><label class="chk"><input type="checkbox" id="lnurfehl"' + (L.nurFehl ? ' checked' : '') + '> Nur Fehlmengen bzw. ohne Bestandsangabe</label><div class="grow"></div><button class="btn" type="button" id="lcsv">CSV exportieren</button></div>' +
+    '<div class="tw"><table class="t" id="ltable" data-name="Halbfabrikat_Bedarf"><thead><tr><th>Halbfabrikat</th><th>Bezeichnung</th><th class="num">Aufträge</th><th class="num">Bedarf Stück</th><th class="num">Lagerbestand</th><th class="num">Fehlmenge</th><th>Fertigungsaufträge</th></tr></thead><tbody>' +
+    (rows.length ? rows.map(r => '<tr><td class="mono">' + esc(r.h) + '</td><td class="clip">' + esc(r.a?.bez || '') + '</td><td class="num">' + r.g.n + '</td><td class="num">' + fmtNum(r.g.bedarf, 0) + '</td><td class="num"><input type="number" min="0" step="1" style="width:90px;text-align:right" data-bestand="' + esc(r.h) + '" value="' + (r.lager ?? '') + '" placeholder="–" aria-label="Lagerbestand ' + esc(r.h) + '"></td><td class="num">' + (r.fehl === null ? '<span class="muted">?</span>' : r.fehl > 0 ? '<b style="color:var(--bad)">' + fmtNum(r.fehl, 0) + '</b>' : pill('gedeckt', 'ok')) + '</td><td class="clip mono" title="' + esc(r.g.orders.join(', ')) + '">' + esc(r.g.orders.join(', ')) + '</td></tr>').join('') : '<tr><td colspan="7"><div class="empty">Keine offenen Aufträge mit Halbfabrikat-Zuordnung.</div></td></tr>') +
+    '</tbody></table></div><p class="hint">Bedarf = Summe der offenen Aufträge je Halbfabrikat in Einzelstück (wie Tabelle4: Paarzahl × 2). Lagerbestand bitte aus Infor eintragen – er wird gespeichert.</p>';
+}
+
+/* ===================== Kennzahlen & Lieferungen (Blätter Kennzahlen Sheet, Geliefert_R_&_S) ===================== */
+VIEW_IMPL.kennzahlen = {
+  sub() { return 'Liefertreue und Auslieferungen aus der Lieferhistorie (Blatt Geliefert) plus neue Buchungen'; },
+  toolbar() {
+    const k = S.ui.kenn; const years = new Set(); gelAll().forEach(r => { const n = D.parse(r.ltIst || r.ltBest); if (n !== null) years.add(new Date(n * 864e5).getUTCFullYear()); });
+    return '<div class="toolbar"><label class="f">Zeitraum<select id="kjahr"><option value="alle">Gesamte Historie</option><option value="12m"' + (k.jahr === '12m' ? ' selected' : '') + '>Letzte 12 Monate</option>' + Array.from(years).sort((a, b) => b - a).map(y => '<option' + (String(y) === k.jahr ? ' selected' : '') + '>' + y + '</option>').join('') + '</select></label><label class="f">Lieferungen durchsuchen<input type="search" id="kq" value="' + esc(k.q) + '" placeholder="FA, KA, Artikel, Kunde"></label><div class="grow"></div><button class="btn" type="button" id="kcsv">CSV exportieren</button></div>';
+  },
+  bindToolbar() { const k = S.ui.kenn; let t; $('#kjahr').onchange = e => { k.jahr = e.target.value; k.page = 0; scheduleRender(); }; $('#kq').oninput = e => { clearTimeout(t); t = setTimeout(() => { k.q = e.target.value; k.page = 0; scheduleRender(); }, 200); }; $('#kcsv').onclick = () => { const rows = kennRows(); download('Lieferungen_' + D.str(D.today()) + '.csv', csv([['Artikelnummer', 'Kundenauftrag', 'Fertigungsauftrag', 'Kunde', 'Bezeichnung', 'Typ', 'Stückzahl', 'Bestätigter Liefertermin', 'Tatsächlicher Liefertermin', 'Performance']].concat(rows.map(r => [r.artikel, r.ka, r.fa, r.kunde, r.bez || article(r.artikel)?.bez || '', r.typ, r.stueck, D.fmt(r.ltBest), D.fmt(r.ltIst), r.perf])))); }; },
+  body() {
+    const rows = kennRows(true);
+    const fa = new Set(), ka = new Set(); let nach = 0, rollen = 0, strehler = 0, v = 0, p = 0, f = 0;
+    const kaLate = new Map();
+    for (const r of rows) {
+      if (/nacharbeit/i.test(r.fa)) nach++; else if (/^\d+$/.test(String(r.fa))) fa.add(String(r.fa));
+      if (r.ka) { const k = norm(r.ka); ka.add(k); if (!kaLate.has(k)) kaLate.set(k, false); if (r.perf === 'Verspätet') kaLate.set(k, true); }
+      const t = norm(r.typ); const s = numOr(r.stueck, 0);
+      if (t === 'rolle tangential') rollen += s * 2; else if (t === 'rolle axial') rollen += s * 3; else if (t === 'rolle radial') rollen += s * 2; else if (t === 'strehler') strehler += s * 4;
+      if (r.perf === 'Verspätet') v++; else if (r.perf === 'Pünktlich') p++; else if (r.perf === 'Früher') f++;
+    }
+    const kaL = Array.from(kaLate.values()).filter(Boolean).length; const kaP = kaLate.size - kaL;
+    const tile = (k, val, s, cls = '') => '<div class="kpi ' + cls + '" style="cursor:default"><span class="k">' + k + '</span><span class="v">' + val + '</span><span class="s">' + s + '</span></div>';
+    let h = '<div class="kpis">' + tile('Liefertreue FA', fmtPct((p + f) / (p + f + v)), (p + f) + ' von ' + (p + f + v) + ' pünktlich oder früher', 'ok') + tile('Liefertreue Kundenaufträge', fmtPct(kaP / (kaP + kaL)), kaP + ' von ' + (kaP + kaL) + ' ohne verspätete Position') + tile('Ausgelieferte FA', fmtNum(fa.size + nach, 0), fa.size + ' FA + ' + nach + ' Nacharbeit') + tile('Ausgelieferte Rollen', fmtNum(rollen, 0), 'Einzelstück (tang./rad. ×2, axial ×3)') + tile('Ausgelieferte Strehler', fmtNum(strehler, 0), 'Einzelstück (×4 je Satz)') + '</div>';
+    h += '<div class="grid g3" style="margin-bottom:14px">' + tile('Verspätet', v, 'Fertigungsaufträge', 'bad') + tile('Pünktlich', p, 'Fertigungsaufträge') + tile('Früher fertig', f, 'Fertigungsaufträge', 'ok') + '</div>';
+    h += '<section class="panel" style="margin-bottom:14px"><h2>Liefertreue je Monat <span class="hint">letzte 24 Monate, Anteil pünktlich + früher</span></h2>' + monthChart() + '</section>';
+    // Archiv
+    const k = S.ui.kenn; const q = norm(k.q); let list = rows; if (q) list = list.filter(r => [r.fa, r.ka, r.artikel, r.kunde, r.bez].some(x => norm(x).includes(q)));
+    list = list.slice().sort((a, b) => (D.parse(b.ltIst || b.ltBest) ?? 0) - (D.parse(a.ltIst || a.ltBest) ?? 0));
+    const PAGE = 100; const pages = Math.max(1, Math.ceil(list.length / PAGE)); if (k.page >= pages) k.page = 0;
+    h += '<section class="panel"><h2>Lieferungen <span class="hint">' + list.length + ' Einträge</span></h2><div class="tw"><table class="t"><thead><tr><th>Geliefert</th><th>Best. Termin</th><th>FA</th><th>KA</th><th>Artikel</th><th>Bezeichnung</th><th>Kunde</th><th class="num">Stück</th><th>Termin</th><th></th></tr></thead><tbody>' +
+      list.slice(k.page * PAGE, k.page * PAGE + PAGE).map(r => '<tr><td class="nowrap">' + D.fmt(r.ltIst || r.ltBest) + ((D.parse(r.ltIst || r.ltBest) ?? 0) > D.today() ? ' ' + pill('Datum in der Zukunft', 'warn') : '') + '</td><td class="nowrap">' + D.fmt(r.ltBest) + '</td><td class="mono">' + esc(r.fa) + '</td><td class="mono">' + esc(r.ka) + '</td><td class="mono">' + esc(r.artikel) + '</td><td class="clip">' + esc(r.bez || article(r.artikel)?.bez || '') + '</td><td class="clip">' + esc(r.kunde) + '</td><td class="num">' + fmtNum(numOr(r.stueck, 0), 0) + '</td><td>' + (r.perf ? pill(r.perf, r.perf === 'Verspätet' ? 'bad' : r.perf === 'Früher' ? 'ok' : 'acc') : '') + '</td><td>' + (r._db ? '<button class="btn small" type="button" data-undo="' + esc(r._id) + '">Zurück in offene Aufträge</button>' : '') + '</td></tr>').join('') +
+      '</tbody></table></div>' + (pages > 1 ? '<div class="tablefoot"><span></span><span class="row"><button class="btn small" type="button" data-kpage="-1"' + (k.page === 0 ? ' disabled' : '') + '>‹ Neuere</button> Seite ' + (k.page + 1) + ' / ' + pages + ' <button class="btn small" type="button" data-kpage="1"' + (k.page >= pages - 1 ? ' disabled' : '') + '>Ältere ›</button></span></div>' : '') + '</section>';
+    return h;
+  },
+  bindBody() {
+    $$('[data-kpage]').forEach(b => b.onclick = () => { S.ui.kenn.page += +b.dataset.kpage; scheduleRender(); });
+    $$('[data-undo]').forEach(b => b.onclick = async () => { const id = b.dataset.undo; const g = S.gelDb.get(id); if (!g || !g.auftrag) { toast('Für diesen Eintrag liegen keine Auftragsdaten vor.'); return; } const o = Object.assign({}, g.auftrag); const oid = g.auftragId || uid('a'); await write(async () => { await Store.set('auftraege', oid, stamp(o)); await Store.del('geliefert', id); }, 'FA ' + (o.fa || '') + ' wieder in offenen Aufträgen'); });
+  }
+};
+function kennRows() {
+  const k = S.ui.kenn; const all = gelAll(); const today = D.today();
+  if (k.jahr === 'alle') return all;
+  if (k.jahr === '12m') return all.filter(r => { const n = D.parse(r.ltIst || r.ltBest); return n !== null && n >= today - 365 && n <= today; });
+  return all.filter(r => { const n = D.parse(r.ltIst || r.ltBest); return n !== null && String(new Date(n * 864e5).getUTCFullYear()) === k.jahr; });
+}
+function monthChart() {
+  const all = gelAll(); const t = new Date(D.today() * 864e5); const months = [];
+  for (let i = 23; i >= 0; i--) { const d = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - i, 1)); months.push({ y: d.getUTCFullYear(), m: d.getUTCMonth(), ok: 0, n: 0 }); }
+  const idx = new Map(months.map((m, i) => [m.y * 12 + m.m, i]));
+  for (const r of all) { const n = D.parse(r.ltIst || r.ltBest); if (n === null) continue; const d = new Date(n * 864e5); const i = idx.get(d.getUTCFullYear() * 12 + d.getUTCMonth()); if (i === undefined || !r.perf) continue; months[i].n++; if (r.perf !== 'Verspätet') months[i].ok++; }
+  const W = 760, H = 220, L = 40, R = 10, T = 12, B = 34; const iw = W - L - R, ih = H - T - B; const bw = iw / months.length;
+  let s = '<div style="overflow-x:auto"><svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="min-width:560px" role="img" aria-label="Liefertreue je Monat">';
+  [0, .25, .5, .75, 1].forEach(v => { const y = T + ih * (1 - v); s += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '"/><text x="' + (L - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + (v * 100) + ' %</text>'; });
+  let path = '', dots = '';
+  months.forEach((m, i) => {
+    const x = L + bw * i + bw / 2;
+    if (m.n) { const v = m.ok / m.n; const y = T + ih * (1 - v); path += (path ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); dots += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (i === months.length - 1 ? 4.5 : 3) + '" fill="var(--accent)"><title>' + (m.m + 1) + '/' + m.y + ': ' + fmtPct(v) + ' (' + m.n + ' FA)</title></circle>'; }
+    if (i % 2 === 0) s += '<text x="' + x + '" y="' + (H - 12) + '" text-anchor="middle">' + String(m.m + 1).padStart(2, '0') + '/' + String(m.y).slice(2) + '</text>';
+  });
+  s += '<path d="' + path + '" fill="none" stroke="var(--accent)" stroke-width="2"/>' + dots + '</svg></div>';
+  return s;
+}
+
+/* ===================== Stammdaten & Einstellungen ===================== */
+VIEW_IMPL.stammdaten = {
+  sub() { return 'Artikelstamm (Kopierrollen_Datengrundlage), Maschinen, Auswahllisten und Terminregeln'; },
+  toolbar() { const t = S.ui.stamm.tab; return '<div class="subtabs">' + [['artikel', 'Artikel'], ['maschinen', 'Maschinen'], ['listen', 'Auswahllisten'], ['regeln', 'Terminregeln & Feiertage'], ['daten', 'Datensicherung']].map(([k, l]) => '<button type="button" data-stab="' + k + '" aria-pressed="' + (t === k) + '">' + l + '</button>').join('') + '</div>'; },
+  bindToolbar() { $$('[data-stab]').forEach(b => b.onclick = () => { S.ui.stamm.tab = b.dataset.stab; renderView(true); }); },
+  body() { const t = S.ui.stamm.tab; return t === 'artikel' ? stammArtikel() : t === 'maschinen' ? stammMaschinen() : t === 'listen' ? stammListen() : t === 'regeln' ? stammRegeln() : stammDaten(); },
+  bindBody() {
+    const t = S.ui.stamm.tab;
+    if (t === 'artikel') {
+      let tm; const q = $('#sq'); q.oninput = () => { clearTimeout(tm); tm = setTimeout(() => { S.ui.stamm.q = q.value; const pos = q.selectionStart; scheduleRender(); requestAnimationFrame(() => { const n = $('#sq'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) { } } }); }, 200); };
+      $$('[data-art]').forEach(tr => tr.onclick = () => openArticle(tr.dataset.art));
+      $('#snew').onclick = () => openArticle(null);
+    }
+    if (t === 'maschinen') $('#msave').onclick = async () => {
+      const ms = clone(S.cfg.maschinen);
+      const gestern = D.str(D.today() - 1);
+      ms.forEach(m => { m.name = $('#mn-' + m.id).value.trim() || m.name; m.lang = $('#ml-' + m.id).value.trim(); const ns = pos($('#ms-' + m.id).value, m.std); if (Math.abs(ns - m.std) > 1e-9) { m.stdHist = (m.stdHist || []).filter(x => x.bis < gestern).concat([{ bis: gestern, std: stdAm(m, gestern) }]); m.std = ns; } m.schichten = pos($('#msch-' + m.id).value, m.schichten); m.staende = $('#mst-' + m.id).value.split(',').map(s => s.trim()).filter(Boolean); });
+      await saveCfg({ maschinen: ms }, 'Maschinen gespeichert');
+    };
+    if (t === 'listen') $('#lsave').onclick = async () => { const g = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean); await saveCfg({ staende: g('#lst'), eingeplant: g('#lein'), gruende: g('#lgr') }, 'Auswahllisten gespeichert'); };
+    if (t === 'regeln') $('#rsave').onclick = async () => {
+      const routen = clone(S.cfg.routen);
+      $$('[data-rt]').forEach(inp => { const [g, ph, i, k] = inp.dataset.rt.split('|'); routen[g][ph][+i][+k] = pos(inp.value, 0); });
+      const regeln = clone(S.cfg.regeln);
+      ['nitrieren', 'eifeler'].forEach(k => { regeln[k].tage = [0, 1, 2, 3, 4].map(i => pos($('#rg-' + k + '-' + i).value, regeln[k].tage[i])); });
+      regeln.sauer.fix = pos($('#rg-sauer').value, 7); regeln.mst.arbeitstage = pos($('#rg-mst').value, 2);
+      const pw = [0, 1, 2, 3, 4].map(i => pos($('#pw-' + i).value, S.cfg.punkteWochen[i]));
+      const ruhe = $('#rruhe').value.split('\n').map(l => l.trim()).filter(Boolean).map(l => { const m = l.match(/^(\d{4}-\d{2}-\d{2}|\d{2}-\d{2})\s*[;,\s]\s*(.*)$/); return m ? { d: m[1], n: m[2] || 'Betriebsruhe' } : null; }).filter(Boolean);
+      holCache.clear();
+      await saveCfg({ routen, regeln, punkteWochen: pw, ruhetage: ruhe }, 'Terminregeln gespeichert');
+    };
+    if (t === 'daten') {
+      $('#dexp').onclick = () => { const out = { exportiert: new Date().toISOString(), auftraege: Object.fromEntries(S.orders), plan: Object.fromEntries(S.planDocs), kapazitaet: Object.fromEntries(S.kap), geliefert: Object.fromEntries(S.gelDb), bestand: Object.fromEntries(S.bestand), artikel: Object.fromEntries(S.overrides), einstellungen: S.cfg }; download('Fertigungsplanung_Sicherung_' + D.str(D.today()) + '.json', JSON.stringify(out, null, 1), 'application/json'); };
+      const rl = $('#dreset'); if (rl) rl.onclick = () => { if ($('#rconf')) return; rl.insertAdjacentHTML('afterend', '<div class="confirm" id="rconf" style="margin-top:10px">Alle lokalen Änderungen gehen verloren. <button class="btn small danger" type="button" id="ryes">Ja, zurücksetzen</button><button class="btn small" type="button" id="rno">Abbrechen</button></div>'); $('#ryes').onclick = () => Local.reset(); $('#rno').onclick = () => $('#rconf').remove(); };
+      $('#dimp').onchange = e => { const f = e.target.files[0]; if (f) restoreBackup(f); e.target.value = ''; };
+    }
+  }
+};
+async function saveCfg(patch, msg) {
+  const ex = S.cfgExists;
+  const ok = await write(() => ex ? Store.update('einstellungen', 'config', stamp(patch)) : Store.set('einstellungen', 'config', stamp(Object.assign({}, patch))), msg);
+  if (ok) { Object.assign(S.cfg, patch); holCache.clear(); }
+}
+function stammArtikel() {
+  const q = S.ui.stamm.q; const res = q.trim().length >= 2 ? searchArticles(q, 100) : [];
+  return '<div class="toolbar"><label class="f" style="flex:1;max-width:420px">Artikel suchen<input type="search" id="sq" value="' + esc(q) + '" placeholder="Artikelnummer, Bezeichnung oder Kopierrolle (mind. 2 Zeichen)"></label><div class="grow"></div><span class="hint">' + fmtNum(S.master ? S.master.length : 0, 0) + ' Artikel aus Excel · ' + S.overrides.size + ' geändert/neu</span><button class="btn primary" type="button" id="snew">+ Neuer Artikel</button></div>' +
+    (q.trim().length < 2 ? '<div class="panel"><div class="empty">Suchbegriff eingeben, um im Artikelstamm zu suchen.</div></div>' :
+      '<div class="tw"><table class="t"><thead><tr><th>Artikel</th><th>Bezeichnung</th><th>Gruppe</th><th>Kategorie</th><th>Beschichtung</th><th>Kopierrolle</th><th>Halbfabrikat</th><th>Nut</th><th class="num">Lieferzeit</th><th>Quelle</th></tr></thead><tbody>' +
+      (res.length ? res.map(a => '<tr class="click" data-art="' + esc(a.nr) + '"><td class="mono">' + esc(a.nr) + '</td><td class="clip">' + esc(a.bez) + '</td><td>' + esc(a.grp) + '</td><td>' + esc(a.kat) + '</td><td class="clip">' + esc(a.besch) + '</td><td class="mono">' + esc(a.kr) + '</td><td class="mono">' + esc(a.halb) + '</td><td>' + esc(a.nut) + '</td><td class="num">' + wochenAusPunkten(a.pkt) + ' Wo</td><td>' + (a.quelle === 'Excel' ? '<span class="muted">Excel</span>' : pill(a.quelle, 'acc')) + '</td></tr>').join('') : '<tr><td colspan="10"><div class="empty">Kein Artikel gefunden.</div></td></tr>') + '</tbody></table></div>' + (res.length >= 100 ? '<p class="hint">Die ersten 100 Treffer – Suche verfeinern.</p>' : ''));
+}
+function stammMaschinen() {
+  return '<div class="tw"><table class="t"><thead><tr><th>Kurzname</th><th>Bezeichnung</th><th>Bereich</th><th class="num">Std./Tag</th><th class="num">Schichten</th><th>Zugehörige Produktionsstände (Komma-getrennt)</th></tr></thead><tbody>' +
+    S.cfg.maschinen.map(m => '<tr><td><input type="text" id="mn-' + m.id + '" value="' + esc(m.name) + '" style="width:130px"></td><td><input type="text" id="ml-' + m.id + '" value="' + esc(m.lang) + '" style="width:300px"></td><td>' + esc(m.bereich) + '</td><td class="num"><input type="number" step="0.1" min="0" id="ms-' + m.id + '" value="' + m.std + '" style="width:80px"></td><td class="num"><input type="number" step="1" min="0" id="msch-' + m.id + '" value="' + m.schichten + '" style="width:70px"></td><td><input type="text" id="mst-' + m.id + '" value="' + esc((m.staende || []).join(', ')) + '" style="width:320px"></td></tr>').join('') +
+    '</tbody></table></div><div class="row" style="margin-top:12px"><button class="btn primary" type="button" id="msave">Maschinen speichern</button><span class="hint">Std./Tag ist die Grundkapazität ab heute – vergangene Tage behalten den bisherigen Wert (Excel: Profilmaschinen 15 h im 2-Schicht-Betrieb, Innenschleifen 38 h/5 = 7,6 h, Proth 8 h). Abweichungen für einzelne Tage im Wochenplan eintragen.</span></div>';
+}
+function stammListen() {
+  const ta = (id, l, rows, hint) => '<label class="f">' + l + '<textarea id="' + id + '" rows="14">' + esc(rows.join('\n')) + '</textarea><span class="hint">' + hint + '</span></label>';
+  return '<div class="grid g3">' + ta('lst', 'Produktionsstände / Arbeitsgänge', S.cfg.staende, 'Eine Zeile je Eintrag (Blatt Fertigungsschritte_Datengrundlage).') + ta('lein', 'Status „Eingeplant“', S.cfg.eingeplant, 'Zusätzlich wählbar: KW der Einplanung (wird beim Einplanen automatisch gesetzt).') + ta('lgr', 'Verzögerungsgründe', S.cfg.gruende, 'Auswahl bei verspäteten Aufträgen.') + '</div><div class="row" style="margin-top:12px"><button class="btn primary" type="button" id="lsave">Auswahllisten speichern</button></div>';
+}
+function stammRegeln() {
+  let h = '<div class="grid g2" style="align-items:start"><section class="panel"><h2>Versandregeln externe Lieferanten</h2><div class="tw"><table class="t"><thead><tr><th>Regel</th><th class="num">Mo</th><th class="num">Di</th><th class="num">Mi</th><th class="num">Do</th><th class="num">Fr</th></tr></thead><tbody>';
+  ['nitrieren', 'eifeler'].forEach(k => { h += '<tr><td>' + esc(S.cfg.regeln[k].name) + '<div class="hint">Kalendertage bis Rückkehr, je Versandtag</div></td>' + S.cfg.regeln[k].tage.map((v, i) => '<td class="num"><input type="number" min="0" id="rg-' + k + '-' + i + '" value="' + v + '" style="width:60px"></td>').join('') + '</tr>'; });
+  h += '</tbody></table></div><div class="fg" style="margin-top:12px"><label class="f">Sauer Profilschleifen (Kalendertage)<input type="number" min="0" id="rg-sauer" value="' + S.cfg.regeln.sauer.fix + '"></label><label class="f">MST Polieren / Reinigen (Arbeitstage)<input type="number" min="0" id="rg-mst" value="' + S.cfg.regeln.mst.arbeitstage + '"></label></div>' +
+    '<h2 style="margin-top:18px">Lieferzeit-Faustregel <span class="hint">Punkte → Wochen</span></h2><div class="row">' + S.cfg.punkteWochen.map((v, i) => '<label class="f" style="width:90px">' + (i === 4 ? '≥ 4 P' : i + ' P') + '<input type="number" min="0" id="pw-' + i + '" value="' + v + '"></label>').join('') + '</div>' +
+    '<h2 style="margin-top:18px">Betriebsruhetage <span class="hint">zusätzlich zu den Feiertagen Baden-Württemberg</span></h2><label class="f">Eine Zeile je Tag: <span class="mono">JJJJ-MM-TT Name</span> oder jährlich <span class="mono">MM-TT Name</span><textarea id="rruhe" rows="8">' + esc((S.cfg.ruhetage || []).map(r => r.d + ' ' + r.n).join('\n')) + '</textarea></label></section>';
+  h += '<section class="panel"><h2>Netzplan-Dauern <span class="hint">Arbeitstage optimistisch / realistisch / pessimistisch</span></h2>';
+  for (const [g, rt] of Object.entries(S.cfg.routen)) {
+    h += '<h3 class="sect" style="margin:12px 0 6px">' + esc(g) + '</h3><div class="tw"><table class="t steps"><tbody>';
+    ['vor', 'kern'].forEach(ph => rt[ph].forEach((r, i) => { h += '<tr><td>' + (ph === 'vor' ? '<span class="hint">Vorarbeit · </span>' : '') + esc(r[0]) + '</td>' + [1, 2, 3].map(k => '<td class="num"><input type="number" min="0" step="0.5" data-rt="' + esc(g) + '|' + ph + '|' + i + '|' + k + '" value="' + r[k] + '" aria-label="' + esc(r[0]) + '"></td>').join('') + '</tr>'; }));
+    h += '</tbody></table></div>';
+  }
+  h += '</section></div><div class="row" style="margin-top:12px"><button class="btn primary" type="button" id="rsave">Terminregeln speichern</button></div>';
+  return h;
+}
+function stammDaten() {
+  return '<section class="panel"><h2>Datensicherung</h2><p>Lädt alle im Tool gespeicherten Daten (Aufträge, Einplanungen, Kapazität, neue Lieferungen, Bestände, geänderte Artikel, Einstellungen) als JSON-Datei herunter.</p><div class="row"><button class="btn primary" type="button" id="dexp">Sicherung herunterladen</button><button class="btn" type="button" onclick="exportOrders()">Auftragsliste als CSV</button></div><h2 style="margin-top:20px">Sicherung wiederherstellen</h2><p class="hint">Spielt eine heruntergeladene Sicherungsdatei zurück. Einträge mit gleicher Kennung werden überschrieben, andere bleiben erhalten.</p><label class="btn" style="width:max-content">Sicherungsdatei wählen …<input type="file" id="dimp" accept="application/json,.json" hidden></label><div id="dimpmsg" class="hint"></div>' +
+    (S.mode === 'local' ? '<p class="hint" style="margin-top:16px">Lokaler Testmodus: Daten liegen nur in diesem Browser.</p><button class="btn danger" type="button" id="dreset">Lokale Testdaten zurücksetzen</button>' : '') + '</section>';
+}
+
+/* ===================== Overlay-Grundlagen ===================== */
+let overlayStack = [];
+function openOverlay(kind, html, onClose) {
+  const host = $('#overlay');
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<div class="scrim"></div><div class="' + kind + '" role="dialog" aria-modal="true">' + html + '</div>';
+  host.appendChild(wrap);
+  const close = (force) => { if (!force && wrap._dirty && !wrap._confirmLeave) { wrap._confirmLeave = true; const f = $('.df', wrap); if (f && !$('#leaveWarn', wrap)) { f.insertAdjacentHTML('afterbegin', '<div class="confirm" id="leaveWarn" style="width:100%">Ungespeicherte Änderungen verwerfen? <button class="btn small danger" type="button" id="leaveYes">Verwerfen</button><button class="btn small" type="button" id="leaveNo">Weiter bearbeiten</button></div>'); $('#leaveYes', wrap).onclick = () => close(true); $('#leaveNo', wrap).onclick = () => { wrap._confirmLeave = false; $('#leaveWarn', wrap).remove(); }; } return; } wrap.remove(); overlayStack = overlayStack.filter(o => o !== api); onClose && onClose(); };
+  const api = { el: wrap, close, dirty() { wrap._dirty = true; } };
+  $('.scrim', wrap).onclick = () => close();
+  $$('[data-close]', wrap).forEach(b => b.onclick = () => close());
+  overlayStack.push(api);
+  setTimeout(() => { const f = $('input:not([type=hidden]):not([disabled]),select,textarea', $('.' + kind, wrap)); if (f && kind === 'modal') f.focus(); }, 30);
+  return api;
+}
+/* Negative Zahlen ablehnen: alter Wert bleibt, Hinweis erscheint */
+document.addEventListener('focusin', e => { const t = e.target; if (t && t.matches && t.matches('input[type=number]')) t.dataset.prev = t.value; }, true);
+document.addEventListener('change', e => { const t = e.target; if (t && t.matches && t.matches('input[type=number][min="0"]') && t.value !== '' && Number(t.value) < 0) { e.stopImmediatePropagation(); t.value = t.dataset.prev ?? ''; t.dispatchEvent(new Event('input', { bubbles: true })); toast('Negative Werte sind nicht erlaubt – der bisherige Wert bleibt erhalten.'); } }, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlayStack.length && !e.defaultPrevented) { const t = e.target; if (t && t.closest && t.closest('.ac') && !$('.aclist', t.closest('.ac')).hidden) return; overlayStack[overlayStack.length - 1].close(); } });
+
+/* ===================== Auftrag (Detail / Bearbeiten / Neu) ===================== */
+function openOrder(id, preset) {
+  const isNew = !id;
+  const src = isNew ? Object.assign({ bereich: S.ui.orders.bereich === 'AR' ? 'AR' : 'RS', eingeplant: 'noch nicht eingeplant', gedruckt: 'nein', stand: 'Kommissionieren' }, preset || {}) : S.orders.get(id);
+  if (!src) { toast('Auftrag nicht gefunden.'); return; }
+  const o = Object.assign({ _id: id }, clone(src));
+  const kl = kunden();
+  const render = () => {
+    const x = enrich(o);
+    const fact = (k, v) => '<div><dt>' + k + '</dt><dd>' + (v === '' || v === null || v === undefined ? '<span class="muted">–</span>' : esc(v)) + '</dd></div>';
+    const plan = x.plan.slice().sort((a, b) => a.datum < b.datum ? -1 : 1);
+    return '<div class="dh"><h3>' + (isNew ? 'Neuer Auftrag' : 'FA ' + esc(o.fa || '–') + ' · ' + esc(x.bez || o.artikel || '')) + '</h3>' + (isNew ? '' : perfPill(x) + (x.ueberfaellig ? pill('überfällig', 'bad') : '')) + '<button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div>' +
+      '<form class="db" id="oform" autocomplete="off">' +
+      '<div class="fg">' +
+      '<label class="f">Bereich<select name="bereich"><option value="RS"' + (o.bereich === 'RS' ? ' selected' : '') + '>Rollen &amp; Strehler</option><option value="AR"' + (o.bereich === 'AR' ? ' selected' : '') + '>Ausrüstung</option></select></label>' +
+      '<label class="f">Artikelnummer<div class="ac"><input type="text" name="artikel" value="' + esc(o.artikel) + '" placeholder="Nummer oder Bezeichnung tippen"><div class="aclist" hidden></div></div><span class="hint" id="oart">' + (x.a ? esc(x.a.bez) + ' · ' + esc(x.a.grp) : o.artikel ? 'Nicht in den Stammdaten – Bezeichnung und Typ unten eintragen' : '') + '</span></label>' +
+      '<label class="f">Kundenauftrag<input type="text" name="ka" value="' + esc(o.ka) + '" placeholder="z. B. KA82644 oder Lager"></label>' +
+      '<label class="f">Fertigungsauftrag<input type="text" name="fa" value="' + esc(o.fa) + '" placeholder="z. B. 90125 oder Nacharbeit"></label>' +
+      '<label class="f span2">Kunde<input type="text" name="kunde" list="kundenl" value="' + esc(o.kunde) + '"><datalist id="kundenl">' + kl.map(k => '<option value="' + esc(k) + '">').join('') + '</datalist></label>' +
+      ((!x.a || o.bereich === 'AR' || o.bez || o.typ) ? '<label class="f">Bezeichnung (falls abweichend)<input type="text" name="bez" value="' + esc(o.bez) + '" placeholder="' + esc(x.a?.bez || '') + '"></label><label class="f">Typ (falls abweichend)<input type="text" name="typ" value="' + esc(o.typ) + '" placeholder="' + esc(x.a?.grp || 'z. B. Rolle tangential') + '"></label>' : '') +
+      '<label class="f">Stückzahl ' + (x.einheit ? '(' + x.einheit + ')' : '') + '<input type="number" name="stueck" min="0" step="1" value="' + esc(o.stueck ?? '') + '"></label>' +
+      '<label class="f">FA-Papiere gedruckt<select name="gedruckt">' + opts(['ja', 'nein'], o.gedruckt || 'nein') + '</select></label>' +
+      '<label class="f">Bestätigter Liefertermin<input type="date" name="ltBest" value="' + esc(o.ltBest || '') + '"><span class="hint">' + (x.kw ? 'KW ' + x.kw : '') + '</span></label>' +
+      '<label class="f">Aktueller / tatsächlicher Liefertermin<input type="date" name="ltIst" value="' + esc(o.ltIst || '') + '"><span class="hint">' + (x.perf ? x.perf + (x.diff ? ' (' + (x.diff > 0 ? '+' : '') + x.diff + ' Tage)' : '') : 'leer = wie bestätigt') + '</span></label>' +
+      '<label class="f">Produktionsstand<select name="stand">' + opts(standListe(), o.stand, '–') + '</select></label>' +
+      (o.bereich === 'AR' ? '<label class="f">Halbfabrikat<input type="text" name="halb" value="' + esc(o.halb) + '"></label>' : '<label class="f">Eingeplant<select name="eingeplant">' + opts(S.cfg.eingeplant, eingeplantNorm(o.eingeplant)) + '</select><span class="hint">Beim Einplanen automatisch „KW …“</span></label>') +
+      (x.nut && x.nut !== 'nein' && o.bereich !== 'AR' ? '<label class="f">Nut geschliffen<select name="nutGeschliffen">' + opts(['nein', 'ja', 'N/A'], x.nutGeschliffen) + '</select><span class="hint">Nut lt. Stammdaten: ' + esc(x.nut) + '</span></label>' : '') +
+      (x.perf === 'Verspätet' || x.ueberfaellig || o.grund ? '<label class="f">Verzögerungsgrund<select name="grund">' + opts(S.cfg.gruende, o.grund, '– bitte wählen –') + '</select></label>' : '') +
+      '<label class="f span2">Bemerkung<textarea name="bemerkung" rows="2">' + esc(o.bemerkung) + '</textarea></label>' +
+      '<label class="f span2">Sonstige Bemerkung<input type="text" name="sonstige" value="' + esc(o.sonstige) + '"></label>' +
+      '</div>' +
+      (x.a ? '<div class="sect">Aus den Stammdaten</div><dl class="facts">' + fact('Typ', x.typ) + fact('Paar/Satz', x.einheit) + fact('Größe', x.groesse) + fact('Beschichtung', x.besch) + fact('Steigung', x.stg) + fact('Kopierrolle', x.kr) + fact('Halbfabrikat', x.halb) + fact('3/4-Fabrikat', x.f34) + fact('1/4-Fabrikat', x.f14) + fact('Nut schleifen', x.nut) + fact('Lieferzeit', x.lieferWochen ? x.lieferWochen + ' Wochen (' + x.punkte + ' P)' : '') + fact('Einzelstück', fmtNum(x.stueckEinzel, 0)) + (x.a.bes ? fact('Besonderheit', x.a.bes) : '') + '</dl><div class="hint">Maschinen-Eignung: ' + S.cfg.maschinen.map(m => { const c = capOf(x.a, m.id); return c ? esc(m.name) + ' ' + (c.startsWith('ja') ? '✓' : '✗') : ''; }).filter(Boolean).join(' · ') + '</div>' : '') +
+      (isNew ? '' : '<div class="sect">Einplanung</div>' + (plan.length ? '<div class="tw"><table class="t"><thead><tr><th>Datum</th><th>Maschine</th><th class="num">Stück</th><th class="num">Stunden</th><th></th></tr></thead><tbody>' + plan.map(e => '<tr><td>' + D.dayShort(D.parse(e.datum)) + ' ' + D.fmt(e.datum) + '</td><td>' + esc(machine(e.maschine)?.name || e.maschine) + '</td><td class="num">' + fmtNum(numOr(e.stueck, 0), 0) + '</td><td class="num">' + fmtNum(numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0)) + '</td><td><button class="btn small" type="button" data-pentry="' + esc(e.id) + '">Bearbeiten</button></td></tr>').join('') + '</tbody></table></div><div class="hint">' + fmtNum(x.geplantStueck, 0) + ' von ' + fmtNum(x.stueckEinzel, 0) + ' Einzelstück eingeplant (' + fmtNum(numOr(o.stueck, 0), 0) + ' ' + esc(x.einheit || 'Stk') + ') · ' + fmtNum(x.geplantH) + ' h</div>' : '<div class="hint">Noch keine Maschinenzeit eingeplant.</div>')) +
+      (o.geaendertAm ? '<div class="hint" id="ochg">Zuletzt geändert ' + new Date(o.geaendertAm).toLocaleString('de-DE', { dateStyle: 'short', timeStyle: 'short' }) + '</div>' : '') +
+      '</form>' +
+      '<div class="df"><button class="btn primary" type="button" id="osave">' + (isNew ? 'Auftrag anlegen' : 'Speichern') + '</button>' +
+      (isNew ? '' : '<button class="btn" type="button" id="oplan">Einplanen …</button><button class="btn" type="button" id="otermin">Terminrechner</button><button class="btn" type="button" id="odeliv">Als geliefert buchen …</button><button class="btn" type="button" id="ocopy">Kopieren</button><div class="grow"></div><button class="btn danger" type="button" id="odel">Löschen</button>') +
+      (isNew ? '' : '') + '</div>';
+  };
+  const ov = openOverlay('drawer', render());
+  const host = $('.drawer', ov.el);
+  const readForm = () => { const f = $('#oform', host); const fd = new FormData(f); for (const [k, v] of fd.entries()) o[k] = k === 'stueck' ? pos(v, 0) : String(v).trim(); };
+  const rerender = () => { readForm(); host.innerHTML = render(); bind(); };
+  const bind = () => {
+    $$('[data-close]', host).forEach(b => b.onclick = () => ov.close());
+    const f = $('#oform', host);
+    f.addEventListener('input', () => ov.dirty());
+    f.addEventListener('submit', e => e.preventDefault());
+    const ai = $('input[name=artikel]', host);
+    bindArticleAC(ai, $('.aclist', host), () => { ov.dirty(); rerender(); });
+    ai.addEventListener('change', () => rerender());
+    ['bereich', 'ltBest', 'ltIst'].forEach(n => { const el = $('[name=' + n + ']', host); if (el) el.addEventListener('change', () => rerender()); });
+    $('#osave', host).onclick = async () => {
+      readForm();
+      if (!o.artikel && !o.fa && !o.bez) { toast('Bitte mindestens Artikelnummer oder Fertigungsauftrag angeben.'); return; }
+      const dup = o.fa && !/nacharbeit/i.test(o.fa) ? Array.from(S.orders.entries()).find(([k, v]) => k !== id && String(v.fa || '').trim() === String(o.fa).trim()) : null;
+      if (dup && !host._dupOk) { host._dupOk = true; const df = $('.df', host); df.insertAdjacentHTML('afterbegin', '<div class="confirm" id="dupw" style="width:100%">FA ' + esc(o.fa) + ' gibt es bereits (' + esc(enrich(Object.assign({ _id: dup[0] }, dup[1])).bez || dup[1].artikel) + '). Nochmals klicken, um trotzdem zu speichern.</div>'); return; }
+      const doc = {}; for (const k of ['bereich', 'artikel', 'ka', 'fa', 'kunde', 'bez', 'typ', 'stueck', 'gedruckt', 'ltBest', 'ltIst', 'stand', 'eingeplant', 'nutGeschliffen', 'grund', 'bemerkung', 'sonstige', 'halb', 'pos', 'angelegtAm']) if (o[k] !== undefined && o[k] !== '') doc[k] = o[k];
+      if (isNew) { doc.angelegtAm = new Date().toISOString(); doc.pos = Math.max(0, ...Array.from(S.orders.values()).map(v => v.pos || 0)) + 1; }
+      stamp(doc);
+      const nid = id || uid('a');
+      const ok = await write(() => Store.set('auftraege', nid, doc), isNew ? 'Auftrag angelegt: ' + (doc.fa || doc.artikel) : 'Gespeichert: FA ' + (doc.fa || ''));
+      if (ok) { ov.close(true); if (norm(doc.stand) === 'geliefert') openDelivered(nid); }
+    };
+    if (isNew) return;
+    $('#oplan', host).onclick = () => { ov.close(true); openPlanDialog({ orderId: id }); };
+    $('#otermin', host).onclick = () => { const st = terminState(); st.artikel = o.artikel || ''; const a = article(o.artikel); if (a) st.gruppe = canonGroup(a.grp); st.orderId = id; st.modus = 'vor'; st.datum = D.str(D.today()); st._init = false; ov.close(true); location.hash = 'termin'; if (S.view === 'termin') renderView(true); };
+    $('#odeliv', host).onclick = () => { ov.close(true); openDelivered(id); };
+    $('#ocopy', host).onclick = () => { readForm(); const p = clone(o); delete p._id; delete p.geaendertAm; delete p.geaendertVon; delete p.pos; ov.close(true); openOrder(null, p); toast('Kopie erstellt – bitte FA anpassen und anlegen.'); };
+    $('#odel', host).onclick = () => {
+      const df = $('.df', host); if ($('#delc', host)) return;
+      df.insertAdjacentHTML('afterbegin', '<div class="confirm" id="delc" style="width:100%">Auftrag FA ' + esc(o.fa) + ' endgültig löschen? <button class="btn small danger" type="button" id="dely">Ja, löschen</button><button class="btn small" type="button" id="deln">Abbrechen</button></div>');
+      $('#deln', host).onclick = () => $('#delc', host).remove();
+      $('#dely', host).onclick = async () => { const backup = clone(S.orders.get(id)); const ok = await write(() => Store.del('auftraege', id)); if (ok) { ov.close(true); toast('Auftrag gelöscht', { label: 'Rückgängig', fn: () => write(() => Store.set('auftraege', id, backup), 'Wiederhergestellt') }); } };
+    };
+    $$('[data-pentry]', host).forEach(b => b.onclick = () => openEntry(b.dataset.pentry));
+    const chg = $('#ochg', host); if (chg && o.geaendertVon) profileName(o.geaendertVon).then(n => { if (n) chg.textContent += ' von ' + n; });
+  };
+  bind();
+}
+
+/* Lieferung buchen: Auftrag wandert in die Lieferhistorie (Blatt Geliefert_R_&_S) */
+function openDelivered(id) {
+  const o = S.orders.get(id); if (!o) return; const x = enrich(Object.assign({ _id: id }, o));
+  const ov = openOverlay('modal', '<div class="dh"><h3>Lieferung buchen · FA ' + esc(o.fa) + '</h3><button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db"><p>' + esc(x.bez || o.artikel) + ' · ' + esc(o.kunde) + ' · ' + fmtNum(numOr(o.stueck, 0), 0) + ' ' + esc(x.einheit) + '</p><div class="fg"><label class="f">Tatsächliches Lieferdatum<input type="date" id="gdat" value="' + D.str(D.today()) + '"></label><label class="f">Bestätigter Termin<input type="text" value="' + D.fmt(o.ltBest) + '" disabled></label></div><p class="hint" id="gperf"></p><p class="hint">Der Auftrag verschwindet aus den offenen Aufträgen und zählt in den Kennzahlen. Unter „Kennzahlen & Lieferungen“ lässt sich die Buchung zurücknehmen.</p></div><div class="df"><button class="btn primary" type="button" id="gok">Lieferung buchen</button><button class="btn" type="button" data-close>Abbrechen</button></div>');
+  const upd = () => { const p = perfOf(o.ltBest, $('#gdat', ov.el).value); $('#gperf', ov.el).textContent = p ? 'Ergebnis: ' + p : ''; };
+  $('#gdat', ov.el).onchange = upd; upd();
+  $('#gok', ov.el).onclick = async () => {
+    const dat = $('#gdat', ov.el).value || D.str(D.today());
+    const g = stamp({ artikel: o.artikel || '', ka: o.ka || '', fa: o.fa || '', kunde: o.kunde || '', bez: x.bez || '', typ: x.typ || '', stueck: numOr(o.stueck, 0), ltBest: o.ltBest || dat, ltIst: dat, perf: perfOf(o.ltBest || dat, dat), bereich: o.bereich, auftrag: Object.assign({}, o, { stand: o.stand === 'geliefert' ? 'Sortieren/Verpacken' : o.stand }), auftragId: id });
+    const gid = uid('g');
+    const ok = await write(async () => { await Store.set('geliefert', gid, g); await Store.del('auftraege', id); });
+    if (ok) { ov.close(true); toast('Geliefert gebucht: FA ' + (o.fa || '') + ' (' + g.perf + ')', { label: 'Rückgängig', fn: () => write(async () => { await Store.set('auftraege', id, o); await Store.del('geliefert', gid); }, 'Buchung zurückgenommen') }); }
+  };
+}
+
+/* ===================== Einplanen ===================== */
+function laufzeitVorschlag(artikel, stueck) {
+  // Stunden je Stück aus bisherigen Einplanungen dieses Artikels (Excel-Stammdaten-Laufzeiten sind uneinheitlich)
+  if (!artikel) return null; let h = 0, s = 0;
+  for (const e of S.entries) if (String(e.artikel) === String(artikel) && numOr(e.stueck, 0) > 0) { h += numOr(e.laufzeit, 0); s += numOr(e.stueck, 0); }
+  if (!s || !h) return null; return Math.round(h / s * numOr(stueck, 0) * 2) / 2;
+}
+function openPlanDialog(p) {
+  const st = { orderId: p.orderId || null, frei: p.frei || '', maschine: p.maschine || null, datum: p.datum || null, stueck: null, laufzeit: null, ruest: 0, einTag: false, bemerkung: '', q: '', vorschlag: false };
+  let ord = st.orderId ? Object.assign({ _id: st.orderId }, S.orders.get(st.orderId)) : null;
+  const init = () => {
+    if (!ord) return; const x = enrich(ord);
+    const ms = S.cfg.maschinen.filter(m => (m.staende || []).includes(ord.stand)); if (ms.length && !st.maschine) st.maschine = ms[0].id;
+    const rest = Math.max(0, x.stueckEinzel - x.geplantStueck); st.stueck = x.geplantStueck > 0 ? rest : x.stueckEinzel; st.vollGeplant = x.geplantStueck > 0 && rest === 0;
+    const v = st.stueck > 0 ? laufzeitVorschlag(ord.artikel, st.stueck) : null; if (v !== null) { st.laufzeit = v; st.vorschlag = true; } else { st.laufzeit = null; st.vorschlag = false; }
+  };
+  init();
+  if (!st.datum) { let n = D.today(); if (!isWorkday(n)) n = addWorkdays(n, 1); st.datum = D.str(n); }
+  const ov = openOverlay('modal', '<div class="dh"><h3>Einplanen</h3><button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db"><div id="pbody" style="display:flex;flex-direction:column;gap:14px"></div><div id="pprev" style="display:flex;flex-direction:column;gap:10px"></div></div><div class="df"><button class="btn primary" type="button" id="pok">Einplanen</button><button class="btn" type="button" data-close>Abbrechen</button><span class="hint" id="pmsg"></span></div>');
+  const body = $('#pbody', ov.el), prev = $('#pprev', ov.el);
+  const drawPreview = () => {
+    const lz = pos(st.laufzeit, 0), rz = pos(st.ruest, 0); let h = '';
+    if (st.maschine && (lz + rz) > 0 && D.parse(st.datum) !== null) {
+      const v = verteilen(st.maschine, D.parse(st.datum), lz, rz, pos(st.stueck, 0), { einTag: st.einTag });
+      st.vorschau = v;
+      h += '<div class="sect">Vorschau</div><div class="tw"><table class="t"><thead><tr><th>Tag</th><th class="num">Stunden</th><th class="num">Stück</th><th class="num">Frei danach</th></tr></thead><tbody>' + v.map(d => { const c = kapa(st.maschine, d.n); const after = c.rest - d.laufzeit - d.ruestzeit; return '<tr><td>' + D.dayShort(d.n) + ' ' + D.fmt(d.n) + (c.bem ? ' <span class="hint">' + esc(c.bem) + '</span>' : '') + '</td><td class="num">' + fmtNum(d.laufzeit + d.ruestzeit) + (d.ruestzeit ? ' <span class="hint">inkl. ' + fmtNum(d.ruestzeit) + ' Rüsten</span>' : '') + '</td><td class="num">' + fmtNum(d.stueck, 0) + '</td><td class="num" style="color:var(--' + (after < -1e-6 ? 'bad' : 'ink-2') + ')">' + fmtNum(after) + ' h</td></tr>'; }).join('') + '</tbody></table></div>' + (v.length > 15 ? '<div class="banner">Verteilung über ' + v.length + ' Tage – bitte Laufzeit prüfen.</div>' : '') + (v.warn ? '<div class="banner">' + esc(v.warn) + '</div>' : '') + (ord && (ord.ltIst || ord.ltBest) && v.length && v[v.length - 1].n > D.parse(ord.ltIst || ord.ltBest) ? '<div class="banner" style="background:var(--bad-soft);border-color:var(--bad)">Achtung: Fertigstellung ' + D.fmt(v[v.length - 1].n) + ' liegt nach dem Liefertermin ' + D.fmt(ord.ltIst || ord.ltBest) + '.</div>' : '');
+    } else { st.vorschau = null; h = '<div class="hint">' + (!st.maschine ? 'Maschine wählen' : 'Laufzeit in Stunden eingeben') + ', dann erscheint hier die Verteilung auf die Tage.</div>'; }
+    prev.innerHTML = h;
+  };
+  const draw = () => {
+    const x = ord ? enrich(ord) : null; const a = x?.a;
+    let h = '<div class="sect">1 · Was</div>';
+    if (ord) h += '<div class="facts" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div><dt>FA</dt><dd class="mono">' + esc(ord.fa) + '</dd></div><div><dt>Artikel</dt><dd>' + esc(ord.artikel) + '</dd></div><div><dt>Kunde</dt><dd>' + esc(ord.kunde) + '</dd></div><div><dt>Termin</dt><dd>' + D.fmt(ord.ltIst || ord.ltBest) + '</dd></div><div style="grid-column:1/-1"><dt>Bezeichnung · Stand</dt><dd>' + esc(x.bez) + ' · ' + esc(ord.stand) + ' · ' + fmtNum(numOr(ord.stueck, 0), 0) + ' ' + esc(x.einheit) + ' = ' + fmtNum(x.stueckEinzel, 0) + ' Stück' + (x.geplantStueck ? ' · bereits ' + fmtNum(x.geplantStueck, 0) + ' Stück eingeplant' : '') + '</dd></div></div>' + (st.vollGeplant ? '<div class="banner">Dieser Auftrag ist bereits vollständig eingeplant. Stückzahl und Laufzeit nur eintragen, wenn zusätzlich Zeit nötig ist (z. B. Nacharbeit).</div>' : '') + '<button class="btn small" type="button" id="pchg" style="align-self:flex-start">Anderen Auftrag wählen</button>';
+    else h += '<div class="fg"><label class="f span2">Auftrag suchen<div class="ac"><input type="text" id="pq" value="' + esc(st.q) + '" placeholder="FA, Artikel oder Kunde"><div class="aclist" id="pql" hidden></div></div></label><label class="f span2">… oder ohne Auftrag (z. B. Personal, Wartung, Kopierrollen)<input type="text" id="pfrei" value="' + esc(st.frei) + '" placeholder="Text für den Eintrag"></label></div>';
+    h += '<div class="sect">2 · Maschine</div><div class="mpick">' + S.cfg.maschinen.map(m => { const c = a ? capOf(a, m.id) : ''; const match = ord && (m.staende || []).includes(ord.stand); return '<button type="button" data-pm="' + m.id + '" aria-pressed="' + (st.maschine === m.id) + '"><b>' + esc(m.name) + '</b><small class="' + (c.startsWith('ja') || match ? '' : 'muted') + '">' + (match ? 'passt zum Produktionsstand' : c ? (c.startsWith('ja') ? 'geeignet lt. Stammdaten' : 'lt. Stammdaten nicht geeignet') : 'Eignung unbekannt') + '</small></button>'; }).join('') + '</div>';
+    h += '<div class="sect">3 · Wann und wie lange</div><div class="fg"><label class="f">Start ab<input type="date" id="pdat" value="' + esc(st.datum) + '"></label><label class="f">Stückzahl (Einzelstück)<input type="number" min="0" step="1" id="pst" value="' + esc(st.stueck ?? '') + '"></label><label class="f">Laufzeit gesamt (Stunden)<input type="number" min="0" step="0.5" id="plz" value="' + esc(st.laufzeit ?? '') + '"><span class="hint" id="plzh">' + (st.vorschlag ? 'Vorschlag aus bisherigen Einplanungen dieses Artikels' : '') + '</span></label><label class="f">Rüstzeit (Stunden)<input type="number" min="0" step="0.5" id="prz" value="' + esc(st.ruest ?? 0) + '"></label>' +
+      '<label class="chk span2"><input type="checkbox" id="pein"' + (st.einTag ? ' checked' : '') + '> Alles auf den Starttag legen (sonst automatisch auf die freie Kapazität der folgenden Tage verteilen)</label><label class="f span2">Bemerkung<input type="text" id="pbem" value="' + esc(st.bemerkung) + '"></label></div>';
+    body.innerHTML = h; bindP(); drawPreview();
+  };
+  const bindP = () => {
+    const pc = $('#pchg', body); if (pc) pc.onclick = () => { ord = null; st.orderId = null; draw(); };
+    const pq = $('#pq', body);
+    if (pq) {
+      const list = $('#pql', body);
+      pq.oninput = () => { st.q = pq.value; const q = norm(pq.value); if (q.length < 2) { list.hidden = true; return; } const res = openOrders(null).filter(o => [o.fa, o.artikel, o.kunde, o.ka].some(v => norm(v).includes(q))).slice(0, 12); list.innerHTML = res.map(o => '<button type="button" data-o="' + esc(o._id) + '"><span class="mono">' + esc(o.fa) + '</span> · ' + esc(enrich(o).bez || o.artikel) + ' <span class="muted">' + esc(o.kunde) + ' · ' + D.fmt(o.ltIst || o.ltBest) + '</span></button>').join('') || '<div class="hint" style="padding:8px">Kein offener Auftrag gefunden.</div>'; list.hidden = false; $$('button', list).forEach(b => b.onmousedown = e => { e.preventDefault(); st.orderId = b.dataset.o; ord = Object.assign({ _id: st.orderId }, S.orders.get(st.orderId)); init(); draw(); }); };
+      pq.onblur = () => setTimeout(() => { list.hidden = true; }, 150);
+      $('#pfrei', body).oninput = e => { st.frei = e.target.value; };
+    }
+    $$('[data-pm]', body).forEach(b => b.onclick = () => { st.maschine = b.dataset.pm; $$('[data-pm]', body).forEach(x => x.setAttribute('aria-pressed', x === b)); drawPreview(); });
+    // Eingaben aktualisieren nur die Vorschau – der Fokus bleibt im Feld
+    const pst = $('#pst', body), plz = $('#plz', body), prz = $('#prz', body);
+    pst.oninput = () => { st.stueck = numOr(pst.value, null); if (st.vorschlag && ord) { const v = laufzeitVorschlag(ord.artikel, st.stueck); if (v !== null) { st.laufzeit = v; plz.value = v; } } drawPreview(); };
+    plz.oninput = () => { st.laufzeit = numOr(plz.value, null); st.vorschlag = false; $('#plzh', body).textContent = ''; drawPreview(); };
+    prz.oninput = () => { st.ruest = numOr(prz.value, 0); drawPreview(); };
+    [pst, plz, prz].forEach(i => i.addEventListener('change', () => { if (numOr(i.value, 0) < 0) { i.value = 0; i.dispatchEvent(new Event('input')); } }));
+    $('#pdat', body).onchange = e => { st.datum = e.target.value; drawPreview(); };
+    $('#pein', body).onchange = e => { st.einTag = e.target.checked; drawPreview(); };
+    $('#pbem', body).oninput = e => { st.bemerkung = e.target.value; };
+  };
+  draw();
+  $('#pok', ov.el).onclick = async () => {
+    const msg = $('#pmsg', ov.el);
+    if (!ord && !st.frei.trim()) { msg.textContent = 'Bitte einen Auftrag wählen oder einen Text eingeben.'; return; }
+    if (!st.maschine) { msg.textContent = 'Bitte eine Maschine wählen.'; return; }
+    if (numOr(st.laufzeit, 0) < 0 || numOr(st.ruest, 0) < 0 || numOr(st.stueck, 0) < 0) { msg.textContent = 'Negative Werte sind nicht erlaubt.'; return; }
+    drawPreview();
+    if (!st.vorschau || !st.vorschau.length) { msg.textContent = 'Bitte Laufzeit bzw. Rüstzeit in Stunden angeben.'; return; }
+    const v = st.vorschau; const btn = $('#pok', ov.el); btn.disabled = true;
+    const ok = await write(async () => {
+      for (const d of v) {
+        await addEntry(st.maschine, { datum: d.datum, artikel: ord ? (ord.artikel || '') : st.frei.trim(), kunde: ord ? (ord.kunde || '') : '', fa: ord ? String(ord.fa || '') : '', orderId: ord ? ord._id : '', stueck: d.stueck, laufzeit: d.laufzeit, ruestzeit: d.ruestzeit, bemerkung: st.bemerkung });
+      }
+      if (ord && ord.bereich !== 'AR') { const cur = eingeplantNorm(ord.eingeplant); if (cur === 'noch nicht eingeplant' || /^KW/i.test(cur)) { const last = v[v.length - 1].n; await Store.update('auftraege', ord._id, stamp({ eingeplant: 'KW ' + String(D.iso(last).w).padStart(2, '0') })); } }
+    }, 'Eingeplant: ' + v.length + (v.length === 1 ? ' Tag' : ' Tage') + ' auf ' + machine(st.maschine).name);
+    btn.disabled = false;
+    if (ok) { ov.close(true); S.ui.plan.week = D.monday(v[0].n); }
+  };
+}
+
+async function restoreBackup(file, confirmed) {
+  const msg = $('#dimpmsg');
+  let data; try { data = JSON.parse(await file.text()); } catch (e) { msg.innerHTML = '<span style="color:var(--bad)">Die Datei ist keine gültige Sicherung (kein JSON). Nichts wurde geändert.</span>'; toast('Ungültige Sicherungsdatei – nichts geändert.'); return; }
+  const cols = ['auftraege', 'plan', 'kapazitaet', 'geliefert', 'bestand', 'artikel'];
+  if (!data || typeof data !== 'object' || !cols.some(c => data[c] && typeof data[c] === 'object')) { msg.innerHTML = '<span style="color:var(--bad)">In der Datei wurden keine Daten dieses Tools gefunden. Nichts wurde geändert.</span>'; toast('Keine Tool-Daten in der Datei – nichts geändert.'); return; }
+  let n = 0, total = cols.reduce((s, c) => s + Object.keys(data[c] || {}).length, 0) + (data.einstellungen ? 1 : 0);
+  if (!confirmed) { msg.innerHTML = '<div class="confirm">Sicherung vom ' + esc(data.exportiert ? new Date(data.exportiert).toLocaleString('de-DE') : 'unbekannten Datum') + ' mit ' + total + ' Einträgen einspielen? Gleichnamige Einträge werden überschrieben. <button class="btn small danger" type="button" id="rsok">Einspielen</button><button class="btn small" type="button" id="rsno">Abbrechen</button></div>'; $('#rsok').onclick = () => restoreBackup(file, true); $('#rsno').onclick = () => { msg.textContent = 'Abgebrochen – nichts geändert.'; }; return; }
+  msg.textContent = 'Wiederherstellen …';
+  const ok = await write(async () => {
+    for (const c of cols) for (const [id, doc] of Object.entries(data[c] || {})) { if (!doc || typeof doc !== 'object') continue; await Store.set(c, id, doc); n++; if (n % 25 === 0) msg.textContent = 'Wiederherstellen … ' + n + ' / ' + total; }
+    if (data.einstellungen) { const cfg = Object.assign({}, data.einstellungen); await Store.set('einstellungen', 'config', cfg); n++; }
+  });
+  msg.textContent = ok ? n + ' Einträge wiederhergestellt.' : 'Wiederherstellen abgebrochen nach ' + n + ' Einträgen.'; toast(ok ? 'Sicherung eingespielt: ' + n + ' Einträge' : 'Wiederherstellen unvollständig');
+}
+
+/* Einzelnen Planeintrag bearbeiten */
+function openEntry(eid) {
+  const x = S.entries.find(e => e.id === eid); if (!x) { toast('Eintrag nicht gefunden.'); return; }
+  const ord = findOrderForEntry(x); const a = article(x.artikel);
+  const ov = openOverlay('modal', '<div class="dh"><h3>Planeintrag · ' + esc(machine(x.maschine)?.name || x.maschine) + ', ' + D.fmt(x.datum) + '</h3><button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db">' +
+    '<p>' + esc(x.artikel) + (a ? ' · ' + esc(a.bez) : '') + (x.kunde ? ' · ' + esc(x.kunde) : '') + (x.fa ? ' · FA ' + esc(x.fa) : '') + '</p>' +
+    '<div class="fg"><label class="f">Maschine<select id="emach">' + S.cfg.maschinen.map(m => '<option value="' + m.id + '"' + (m.id === x.maschine ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('') + '</select></label><label class="f">Datum<input type="date" id="edat" value="' + esc(x.datum) + '"></label>' +
+    '<label class="f">Stückzahl<input type="number" min="0" id="est" value="' + esc(x.stueck ?? '') + '"></label><label class="f">Text / Artikel<input type="text" id="eart" value="' + esc(x.artikel) + '"></label>' +
+    '<label class="f">Laufzeit (h)<input type="number" min="0" step="0.5" id="elz" value="' + esc(x.laufzeit ?? 0) + '"></label><label class="f">Rüstzeit (h)<input type="number" min="0" step="0.5" id="erz" value="' + esc(x.ruestzeit ?? 0) + '"></label>' +
+    '<label class="f span2">Bemerkung<input type="text" id="ebem" value="' + esc(x.bemerkung) + '"></label></div></div>' +
+    '<div class="df"><button class="btn primary" type="button" id="eok">Speichern</button>' + (ord ? '<button class="btn" type="button" id="eord">Auftrag öffnen</button>' : '') + '<div class="grow"></div><button class="btn danger" type="button" id="edel">Eintrag löschen</button></div>');
+  const el = ov.el;
+  $$('input,select', el).forEach(i => i.addEventListener('input', () => ov.dirty()));
+  $('#eok', el).onclick = async () => {
+    const m = $('#emach', el).value, d = $('#edat', el).value; if (!d) { toast('Bitte ein Datum wählen.'); return; }
+    const patch = { stueck: pos($('#est', el).value, 0), artikel: $('#eart', el).value.trim(), laufzeit: pos($('#elz', el).value, 0), ruestzeit: pos($('#erz', el).value, 0), bemerkung: $('#ebem', el).value.trim() };
+    const kc = kapa(m, D.parse(d)); if (kc.verf <= 0 && !el._offOk) { el._offOk = true; $('.df', el).insertAdjacentHTML('afterbegin', '<div class="confirm" style="width:100%">' + D.dayName(D.parse(d)) + ', ' + D.fmt(d) + ' hat keine Kapazität' + (kc.bem ? ' (' + esc(kc.bem) + ')' : '') + '. Nochmals „Speichern“ klicken, um trotzdem zu speichern.</div>'); return; }
+    if (await write(() => moveEntry(x, m, d, patch), 'Planeintrag gespeichert')) ov.close(true);
+  };
+  const eo = $('#eord', el); if (eo) eo.onclick = () => { ov.close(true); openOrder(ord._id); };
+  $('#edel', el).onclick = async () => { const backup = Object.assign({}, x); if (await write(() => removeEntry(x))) { ov.close(true); toast('Planeintrag gelöscht', { label: 'Rückgängig', fn: () => write(() => addEntry(backup.maschine, backup), 'Wiederhergestellt') }); } };
+}
+
+/* Tag einer Maschine: Kapazität, Ausfall, Einträge */
+function openDay(mid, ds) {
+  const n = D.parse(ds); const m = machine(mid); const c = kapa(mid, n);
+  const ov = openOverlay('modal', '<div class="dh"><h3>' + esc(m.name) + ' · ' + D.dayName(n) + ', ' + D.fmt(n) + '</h3><button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db">' +
+    '<div class="sect">Kapazität</div><div class="fg"><label class="f">Grundkapazität (h)<input type="number" min="0" step="0.5" id="kg" value="' + c.grund + '"><span class="hint">Standard: ' + fmtNum(D.wd(n) <= 5 ? m.std : 0) + ' h</span></label><label class="f">Ausfall (h)<input type="number" min="0" step="0.5" id="ka" value="' + c.ausfall + '"><span class="hint">Urlaub, Krankheit, Wartung, Kurzarbeit</span></label>' +
+    '<label class="f span2">Bemerkung<input type="text" id="kb" value="' + esc(c.bem) + '" placeholder="z. B. Urlaub Moni, Gleitzeit Luis, Maschinenwartung"></label></div>' +
+    '<div class="facts"><div><dt>Verfügbar</dt><dd>' + fmtNum(c.verf) + ' h</dd></div><div><dt>Geplant</dt><dd>' + fmtNum(c.geplant) + ' h</dd></div><div><dt>Rest</dt><dd style="color:var(--' + (c.rest < 0 ? 'bad' : 'ok') + ')">' + fmtNum(c.rest) + ' h</dd></div></div>' +
+    '<div class="sect">Einträge</div>' + (c.list.length ? '<div class="tw"><table class="t"><tbody>' + c.list.map(e => '<tr class="click" data-e="' + esc(e.id) + '"><td>' + esc(e.artikel || e.bemerkung) + '<div class="hint">' + esc([e.kunde, e.fa ? 'FA ' + e.fa : '', e.stueck ? fmtNum(numOr(e.stueck, 0), 0) + ' Stk' : ''].filter(Boolean).join(' · ')) + '</div></td><td class="num">' + fmtNum(numOr(e.laufzeit, 0) + numOr(e.ruestzeit, 0)) + ' h</td></tr>').join('') + '</tbody></table></div>' : '<div class="hint">Keine Einträge an diesem Tag.</div>') +
+    '</div><div class="df"><button class="btn primary" type="button" id="kok">Kapazität speichern</button><button class="btn" type="button" id="kadd">+ Eintrag an diesem Tag</button><button class="btn ghost" type="button" id="kstd">Auf Standard zurücksetzen</button></div>');
+  const el = ov.el;
+  $$('input', el).forEach(i => i.addEventListener('input', () => ov.dirty()));
+  $('#kok', el).onclick = async () => {
+    const g = pos($('#kg', el).value, 0), a = Math.min(g, pos($('#ka', el).value, 0)), b = $('#kb', el).value.trim();
+    const std = D.wd(n) <= 5 ? stdAm(m, ds) : 0;
+    const vals = { grund: Math.abs(g - std) > 1e-9 ? g : null, ausfall: a, bemerkung: b };
+    if (await write(() => setKap(ds, mid, vals), 'Kapazität gespeichert')) ov.close(true);
+  };
+  $('#kstd', el).onclick = async () => { if (await write(() => setKap(ds, mid, { grund: null, ausfall: null, bemerkung: null }), 'Auf Standard zurückgesetzt')) ov.close(true); };
+  $('#kadd', el).onclick = () => { ov.close(true); openPlanDialog({ maschine: mid, datum: ds }); };
+  $$('[data-e]', el).forEach(tr => tr.onclick = () => { ov.close(true); openEntry(tr.dataset.e); });
+}
+
+/* Ausfall / Urlaub über mehrere Tage und Maschinen */
+function openAbsence() {
+  const t = D.str(D.today());
+  const ov = openOverlay('modal', '<div class="dh"><h3>Ausfall / Urlaub eintragen</h3><button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db"><div class="sect">Maschinen</div><div class="row">' + S.cfg.maschinen.map(m => '<label class="chk"><input type="checkbox" data-am="' + m.id + '"> ' + esc(m.name) + '</label>').join('') + '</div>' +
+    '<div class="fg"><label class="f">Von<input type="date" id="av" value="' + t + '"></label><label class="f">Bis<input type="date" id="ab" value="' + t + '"></label>' +
+    '<label class="f">Ausfall je Tag<select id="aart"><option value="voll">Ganzer Tag (gesamte Grundkapazität)</option><option value="schicht">Eine Schicht (halbe Grundkapazität)</option><option value="h">Stunden angeben</option><option value="0">Kein Ausfall (nur Bemerkung)</option></select></label><label class="f">Stunden je Tag<input type="number" min="0" step="0.5" id="ah" value="7.5" disabled></label>' +
+    '<label class="f span2">Bemerkung<input type="text" id="abem" placeholder="z. B. Urlaub Moni & Savas, Kurzarbeit, Maschinenwartung"></label></div><p class="hint">Gilt nur für Arbeitstage (Mo–Fr ohne Feiertage).</p></div><div class="df"><button class="btn primary" type="button" id="aok">Eintragen</button><button class="btn" type="button" data-close>Abbrechen</button><span class="hint" id="amsg"></span></div>');
+  const el = ov.el;
+  $('#aart', el).onchange = e => { $('#ah', el).disabled = e.target.value !== 'h'; };
+  $('#aok', el).onclick = async () => {
+    const ms = $$('[data-am]', el).filter(c => c.checked).map(c => c.dataset.am); const v = D.parse($('#av', el).value), b = D.parse($('#ab', el).value);
+    if (!ms.length) { $('#amsg', el).textContent = 'Bitte mindestens eine Maschine wählen.'; return; }
+    if (v === null || b === null || b < v) { $('#amsg', el).textContent = 'Bitte einen gültigen Zeitraum wählen.'; return; }
+    if (b - v > 120) { $('#amsg', el).textContent = 'Maximal 120 Tage auf einmal.'; return; }
+    const art = $('#aart', el).value, hh = pos($('#ah', el).value, 0), bem = $('#abem', el).value.trim();
+    let count = 0;
+    const ok = await write(async () => {
+      for (let n = v; n <= b; n++) {
+        if (!isWorkday(n)) continue;
+        const ds = D.str(n); const tage = {};
+        for (const mid of ms) { const c = kapa(mid, n); const a = art === 'voll' ? c.grund : art === 'schicht' ? c.grund / 2 : art === 'h' ? hh : 0; tage[mid] = { ausfall: Math.min(c.grund, a), bemerkung: bem || c.bem || '' }; }
+        if (S.kap.has(ds)) await Store.update('kapazitaet', ds, { tage }); else { await Store.set('kapazitaet', ds, { tage }); S.kap.set(ds, { tage }); }
+        count++;
+      }
+    });
+    if (ok) { ov.close(true); toast('Eingetragen: ' + count + ' Arbeitstage × ' + ms.length + ' Maschine(n)'); }
+  };
+}
+
+/* Artikel ansehen / bearbeiten / neu */
+function openArticle(nr) {
+  const isNew = !nr; const a = isNew ? { nr: '', kr: '', f34: '', halb: '', f14: '', kat: 'Fertigteil', bez: '', grp: 'Rolle tangential', besch: 'Keine Beschichtung', bes: '', nut: 'prüfen', stg: '', cap: '', lz: null, rz: null, pkt: 0 } : article(nr);
+  if (!a) return;
+  const F = [['nr', 'Artikelnummer'], ['bez', 'Bezeichnung'], ['grp', 'Artikelgruppe'], ['kat', 'Kategorie'], ['kr', 'Kopierrolle'], ['halb', 'Halbfabrikat'], ['f34', '3/4-Fabrikat'], ['f14', '1/4-Fabrikat'], ['besch', 'Beschichtung'], ['bes', 'Besonderheiten'], ['nut', 'Nut vorhanden (ja/nein/prüfen)'], ['stg', 'Gewindesteigung'], ['lz', 'Laufzeit je Paar/Satz (h)'], ['rz', 'Rüstzeit (h)'], ['pkt', 'Lieferzeit-Punkte']];
+  const caps = String(a.cap || '').split('|');
+  const ov = openOverlay('modal', '<div class="dh"><h3>' + (isNew ? 'Neuer Artikel' : 'Artikel ' + esc(a.nr)) + '</h3>' + (a.quelle && a.quelle !== 'Excel' ? pill(a.quelle, 'acc') : '') + '<button class="btn ghost" type="button" data-close aria-label="Schließen">✕</button></div><div class="db"><div class="fg">' +
+    F.map(([k, l]) => '<label class="f' + (k === 'bez' ? ' span2' : '') + '">' + l + (k === 'grp' ? '<select id="af-grp">' + opts(['Rolle tangential', 'Rolle axial', 'Rolle radial', 'Strehler'], ['Rolle tangential', 'Rolle axial', 'Rolle radial', 'Strehler'].find(g => norm(g) === norm(a.grp)) || a.grp) + '</select>' : '<input type="' + (['lz', 'rz', 'pkt'].includes(k) ? 'number" step="0.01' : 'text') + '" id="af-' + k + '" value="' + esc(a[k] ?? '') + '"' + (k === 'nr' && !isNew ? ' disabled' : '') + '>') + '</label>').join('') +
+    '</div><div class="sect">Maschinen-Eignung</div><div class="row">' + S.capOrder.map((mid, i) => '<label class="f" style="width:120px">' + esc(machine(mid)?.name || mid) + '<select id="ac-' + i + '">' + [['', 'unbekannt'], ['j', 'ja'], ['n', 'nein']].map(([v, t]) => '<option value="' + v + '"' + ((caps[i] === v || (v === 'j' && caps[i] && caps[i] !== 'n' && caps[i] !== 'j')) ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></label>').join('') + '</div>' +
+    (!isNew ? '<p class="hint">Lieferzeit-Faustregel: ' + wochenAusPunkten(a.pkt) + ' Wochen. Änderungen werden als Abweichung zum Excel-Stamm gespeichert.</p>' : '') + '</div><div class="df"><button class="btn primary" type="button" id="aok">Speichern</button><button class="btn" type="button" data-close>Abbrechen</button></div>');
+  const el = ov.el;
+  $('#aok', el).onclick = async () => {
+    const d = {}; F.forEach(([k]) => { const i = $('#af-' + k, el); d[k] = ['lz', 'rz', 'pkt'].includes(k) ? (i.value === '' ? null : pos(i.value, 0)) : i.value.trim(); });
+    if (!d.nr) { toast('Artikelnummer fehlt.'); return; }
+    d.cap = S.capOrder.map((_, i) => { const v = $('#ac-' + i, el).value; const old = caps[i]; return v === 'j' && old && old !== 'n' && old !== 'j' ? old : v; }).join('|');
+    if (isNew && (S.masterIdx.has(d.nr) || S.overrides.has(d.nr))) { toast('Diese Artikelnummer gibt es schon.'); return; }
+    delete d.quelle; stamp(d);
+    if (await write(() => Store.set('artikel', d.nr, d), 'Artikel gespeichert: ' + d.nr)) ov.close(true);
+  };
+}
+
+/* ===================== Start ===================== */
+async function loadStatic() {
+  const [m, g] = await Promise.all([fetch('data/stammdaten.json').then(r => r.json()), fetch('data/geliefert.json').then(r => r.json())]);
+  S.master = m.rows; S.capOrder = m.capOrder; S.masterIdx = new Map(m.rows.map((r, i) => [r[0], i]));
+  S.gelStatic = g.rows.map(r => { const o = {}; g.cols.forEach((c, i) => o[c] = r[i]); return o; });
+}
+function subscribeAll() {
+  const done = c => { S.loaded[c] = true; scheduleRender(); };
+  Store.subscribe('auftraege', docs => { S.orders = new Map(Object.entries(docs)); done('auftraege'); });
+  Store.subscribe('plan', docs => { S.planDocs = new Map(Object.entries(docs)); rebuildPlan(); done('plan'); });
+  Store.subscribe('kapazitaet', docs => { S.kap = new Map(Object.entries(docs)); done('kapazitaet'); });
+  Store.subscribe('geliefert', docs => { S.gelDb = new Map(Object.entries(docs)); done('geliefert'); });
+  Store.subscribe('bestand', docs => { S.bestand = new Map(Object.entries(docs)); done('bestand'); });
+  Store.subscribe('artikel', docs => { S.overrides = new Map(Object.entries(docs)); done('artikel'); });
+  Store.subscribe('einstellungen', docs => { S.cfgExists = !!docs.config; S.cfg = mergeCfg(docs.config); holCache.clear(); done('einstellungen'); });
+}
+async function boot() {
+  renderNav();
+  const staticP = loadStatic().catch(e => { console.error(e); $('#banner').innerHTML = '<div class="banner">Stammdaten konnten nicht geladen werden. Bitte Seite neu laden.</div>'; });
+  let db = null;
+  if (window.claude && window.claude.use) {
+    try { db = await window.claude.use('db'); } catch (e) { db = null; }
+    try { S.user = await window.claude.use('user'); if (S.user) { S.uid = await S.user.id(); const me = await S.user.me(); if (me && me.name) $('#footUser').textContent = 'Angemeldet: ' + me.name; } } catch (e) { }
+  }
+  if (db) { S.db = db; S.mode = 'db'; Store = Remote; setConn('warn', 'Lade Daten …'); try { if (S.user && S.user.can) { const w = await S.user.can('data.write'); if (w === false) { S.canWrite = false; $('#banner').innerHTML = '<div class="banner">Sie haben Leserechte. Änderungen sind nur mit Bearbeitungsrecht möglich.</div>'; } } } catch (e) { } }
+  else if (window.claude) { S.mode = 'none'; setConn('bad', 'Datenbank nicht verfügbar'); $('#banner').innerHTML = '<div class="banner">Die gemeinsame Datenbank ist in dieser Ansicht nicht verfügbar (z. B. nicht angemeldet). Bitte anmelden und neu laden.</div>'; return; }
+  else { S.mode = 'local'; Store = Local; await Local.init(); setConn('ok', 'Lokaler Testmodus'); $('#banner').innerHTML = '<div class="banner"><b>Lokaler Testmodus:</b> Daten werden nur in diesem Browser gespeichert.</div>'; }
+  await staticP;
+  subscribeAll();
+  route();
+}
+window.addEventListener('hashchange', route);
+document.addEventListener('click', e => { const b = e.target.closest('[data-action="new-order"]'); if (b) openOrder(null); });
+(() => { let t; const g = $('#gsearch'); g.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { Object.assign(S.ui.orders, { q: g.value, stand: '', eing: '', perf: '', bereich: 'alle', page: 0 }); if (S.view !== 'auftraege') location.hash = 'auftraege'; else renderView(true); }, 250); }); })();
+boot();
+
+</script>
+
+</body></html>
